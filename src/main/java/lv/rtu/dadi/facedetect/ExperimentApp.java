@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 import lv.rtu.dadi.facedetect.detectors.SimpleCorrelationDetector;
@@ -65,12 +65,12 @@ public class ExperimentApp {
     private void testFilters() throws ImageReadException, IOException {
       final BufferedImage img = readImage("data/Parrot1.bmp");
 
-      final GrayscaleBitmap orig = new GrayscaleBitmap(img);
+      final GrayscaleImage orig = new GrayscaleImage(img);
       new ImagePreviewWindow("Original", orig);
 
-      final GrayscaleBitmap filt1 = GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.LOWFREQ_3X3_1).apply(orig);
+      final GrayscaleImage filt1 = GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.LOWFREQ_3X3_1).apply(orig);
       new ImagePreviewWindow("Filtered 1", filt1);
-      final GrayscaleBitmap filt2 = GrayscaleFilterFactory.getMedianFilter(5).apply(filt1);
+      final GrayscaleImage filt2 = GrayscaleFilterFactory.getMedianFilter(5).apply(filt1);
       new ImagePreviewWindow("Filtered 2", filt1);
       final GrayscaleFilter sobel = GrayscaleFilterFactory.getSobelEdgeDetector();
       new ImagePreviewWindow("Sobel from Filtered", sobel.apply(filt1));
@@ -81,8 +81,8 @@ public class ExperimentApp {
 //        final GrayscaleBitmap template = new GrayscaleBitmap(readImage("data/smiley/sample4.jpg"));
 //        final GrayscaleBitmap scene = new GrayscaleBitmap(readImage("data/smiley/scene1.bmp"));
 
-        final GrayscaleBitmap template = new GrayscaleBitmap(readImage("data/toys1/face1.bmp"));
-        final GrayscaleBitmap scene = new GrayscaleBitmap(readImage("data/toys1/scene5.bmp"));
+        final GrayscaleImage template = new GrayscaleImage(readImage("data/toys1/face1.bmp"));
+        final GrayscaleImage scene = new GrayscaleImage(readImage("data/toys1/scene5.bmp"));
 
         final GrayscaleFilter preprocessor = GrayscaleFilterFactory.getFilterChain(
 //                GrayscaleFilterFactory.getMedianFilter(3),
@@ -92,8 +92,8 @@ public class ExperimentApp {
 //                GrayscaleFilterFactory.getPrevittEdgeDetector()
                 );
 
-        final GrayscaleBitmap procTempl = preprocessor.apply(template);
-        final GrayscaleBitmap procScene = preprocessor.apply(scene);
+        final GrayscaleImage procTempl = preprocessor.apply(template);
+        final GrayscaleImage procScene = preprocessor.apply(scene);
 
         final FaceDetector detector = new SimpleCorrelationDetector(procTempl, 0.3);
         final List<FaceLocation> faces = detector.detectFaces(procScene);

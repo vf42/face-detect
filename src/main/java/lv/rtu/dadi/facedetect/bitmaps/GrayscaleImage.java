@@ -9,11 +9,11 @@ import java.awt.image.BufferedImage;
  * @author fedorovvadim
  *
  */
-public class GrayscaleBitmap implements Bitmap {
+public class GrayscaleImage implements Image {
 
     public final double[][] pixels;
 
-    public GrayscaleBitmap(BufferedImage source) {
+    public GrayscaleImage(BufferedImage source) {
         pixels = new double[source.getWidth()][source.getHeight()];
         for (int i = 0 ; i < source.getWidth() ; i++) {
             for (int j = 0; j < source.getHeight() ; j++) {
@@ -28,7 +28,7 @@ public class GrayscaleBitmap implements Bitmap {
         }
     }
 
-    public GrayscaleBitmap(int width, int height, double fill) {
+    public GrayscaleImage(int width, int height, double fill) {
         pixels = new double[width][height];
         for (int i = 0 ; i < width ; i++) {
             for (int j = 0; j < height ; j++) {
@@ -37,12 +37,12 @@ public class GrayscaleBitmap implements Bitmap {
         }
     }
 
-    public GrayscaleBitmap(int width, int height) {
+    public GrayscaleImage(int width, int height) {
         this(width, height, (short) 0);
     }
 
     @Override
-    public Bitmap copy() {
+    public Image copy() {
         return null;
     }
 

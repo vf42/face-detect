@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
  * @author fedorovvadim
  *
  */
-public class RgbBitmap implements Bitmap {
+public class RgbImage implements Image {
 
     public class RgbPixel {
         public final int r, g, b, i;
@@ -28,7 +28,7 @@ public class RgbBitmap implements Bitmap {
 
     public final RgbPixel[][] pixels;
 
-    public RgbBitmap(BufferedImage source) {
+    public RgbImage(BufferedImage source) {
         pixels = new RgbPixel[source.getWidth()][source.getHeight()];
         for (int i = 0 ; i < source.getWidth() ; i++) {
             for (int j = 0; j < source.getHeight() ; j++) {
@@ -59,7 +59,7 @@ public class RgbBitmap implements Bitmap {
     }
 
     @Override
-    public Bitmap copy() {
+    public Image copy() {
         return null;
     }
 }

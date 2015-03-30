@@ -2,7 +2,7 @@ package lv.rtu.dadi.facedetect.filters;
 
 import java.util.Arrays;
 
-import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
  * Creates linear filter for an arbitrary NxN filter.
@@ -77,12 +77,12 @@ public final class GrayscaleFilterFactory {
         return new GrayscaleFilter() {
             short[][] filter = _filter;
             @Override
-            public GrayscaleBitmap apply(GrayscaleBitmap source) {
+            public GrayscaleImage apply(GrayscaleImage source) {
                 // Filter should be odd square array.
                 if (filter.length % 2 != 1 || filter.length != filter[0].length) {
                     throw new RuntimeException("Only square odd filters are allowed.");
                 }
-                final GrayscaleBitmap result = new GrayscaleBitmap(source.getWidth(), source.getHeight());
+                final GrayscaleImage result = new GrayscaleImage(source.getWidth(), source.getHeight());
                 final int size = filter.length;
                 final int shift = size / 2;
                 for (int x = shift ; x < source.pixels.length - shift ; x++) {
@@ -113,11 +113,11 @@ public final class GrayscaleFilterFactory {
         return new GrayscaleFilter() {
             private final int filterSize = _filterSize;
             @Override
-            public GrayscaleBitmap apply(GrayscaleBitmap source) {
+            public GrayscaleImage apply(GrayscaleImage source) {
                 if (filterSize % 2 != 1 || filterSize < 0) {
                     throw new RuntimeException("Incorrect filter size!");
                 }
-                final GrayscaleBitmap result = new GrayscaleBitmap(source.getWidth(), source.getHeight());
+                final GrayscaleImage result = new GrayscaleImage(source.getWidth(), source.getHeight());
                 final int size = filterSize;
                 final int shift = size / 2;
                 for (int x = shift ; x < source.pixels.length - shift ; x++) {
@@ -149,14 +149,14 @@ public final class GrayscaleFilterFactory {
             private final short[][] filterX = _filterX;
             private final short[][] filterY = _filterY;
             @Override
-            public GrayscaleBitmap apply(GrayscaleBitmap source) {
+            public GrayscaleImage apply(GrayscaleImage source) {
                 // Filter should be odd square array.
                 if (filterX.length % 2 != 1 || filterX.length != filterX[0].length
                         || filterY.length % 2 != 1 || filterY.length != filterY[0].length
                         || filterX.length != filterY.length) {
                     throw new RuntimeException("Only square odd filters are allowed.");
                 }
-                final GrayscaleBitmap result = new GrayscaleBitmap(source.getWidth(), source.getHeight());
+                final GrayscaleImage result = new GrayscaleImage(source.getWidth(), source.getHeight());
                 final int size = filterX.length;
                 final int shift = size / 2;
                 for (int x = shift ; x < source.pixels.length - shift ; x++) {
@@ -189,15 +189,15 @@ public final class GrayscaleFilterFactory {
      * Return Normalized Cross Corellation Coefficient filter using given template.
      * @return
      */
-    public static GrayscaleFilter getNCCFilter(GrayscaleBitmap _template) {
+    public static GrayscaleFilter getNCCFilter(GrayscaleImage _template) {
         return new GrayscaleFilter() {
-            private final GrayscaleBitmap template = _template;
+            private final GrayscaleImage template = _template;
             @Override
-            public GrayscaleBitmap apply(GrayscaleBitmap source) {
+            public GrayscaleImage apply(GrayscaleImage source) {
                 if (template.getWidth() > source.getWidth() || template.getHeight() > source.getHeight()) {
                     throw new RuntimeException("Template can't be bigger than scene!");
                 }
-                final GrayscaleBitmap result = new GrayscaleBitmap(source.getWidth(), source.getHeight());
+                final GrayscaleImage result = new GrayscaleImage(source.getWidth(), source.getHeight());
                 final double sceneMean = source.getMean();
                 final double templateMean = template.getMean();
                 for (int a = 0; a < source.getWidth() - template.getWidth() ; a++) {
@@ -226,8 +226,8 @@ public final class GrayscaleFilterFactory {
         return new GrayscaleFilter() {
             private final GrayscaleFilter[] filters = _filters;
             @Override
-            public GrayscaleBitmap apply(GrayscaleBitmap source) {
-                GrayscaleBitmap result = source;
+            public GrayscaleImage apply(GrayscaleImage source) {
+                GrayscaleImage result = source;
                 for (final GrayscaleFilter f : filters) {
                     result = f.apply(result);
                 }

@@ -2,9 +2,9 @@ package lv.rtu.dadi.facedetect.bitmaps;
 
 import java.awt.image.BufferedImage;
 
-public interface Bitmap {
+public interface Image {
 
-    Bitmap copy();
+    Image copy();
     BufferedImage toBufferedImage();
 
     int getWidth();

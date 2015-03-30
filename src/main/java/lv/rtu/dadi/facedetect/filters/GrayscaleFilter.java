@@ -1,6 +1,6 @@
 package lv.rtu.dadi.facedetect.filters;
 
-import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
  * Interface for filtering.
@@ -8,5 +8,5 @@ import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
  *
  */
 public interface GrayscaleFilter {
-    GrayscaleBitmap apply(GrayscaleBitmap source);
+    GrayscaleImage apply(GrayscaleImage source);
 }

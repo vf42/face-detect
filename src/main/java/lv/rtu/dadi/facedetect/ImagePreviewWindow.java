@@ -13,8 +13,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
-import lv.rtu.dadi.facedetect.bitmaps.RgbBitmap;
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
+import lv.rtu.dadi.facedetect.bitmaps.RgbImage;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
@@ -56,11 +56,11 @@ public class ImagePreviewWindow extends JFrame {
             this.faces = null;
         }
 
-        public ImageCanvas(GrayscaleBitmap bmp, GrayscaleDrawMode mode) {
+        public ImageCanvas(GrayscaleImage bmp, GrayscaleDrawMode mode) {
             this(bmp, mode, null);
         }
 
-        public ImageCanvas(GrayscaleBitmap bmp, GrayscaleDrawMode mode, List<FaceLocation> faces) {
+        public ImageCanvas(GrayscaleImage bmp, GrayscaleDrawMode mode, List<FaceLocation> faces) {
             this.image = new BufferedImage(bmp.getWidth(), bmp.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < bmp.getWidth(); x++) {
                 for (int y = 0; y < bmp.getHeight(); y++) {
@@ -93,7 +93,7 @@ public class ImagePreviewWindow extends JFrame {
             this.faces = faces;
         }
 
-        public ImageCanvas(RgbBitmap bmp, RgbDrawMode mode) {
+        public ImageCanvas(RgbImage bmp, RgbDrawMode mode) {
             this.image = new BufferedImage(bmp.getWidth(), bmp.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < bmp.getWidth(); x++) {
                 for (int y = 0; y < bmp.getHeight(); y++) {
@@ -152,7 +152,7 @@ public class ImagePreviewWindow extends JFrame {
      * @param bmp
      * @param mode
      */
-    public ImagePreviewWindow(String title, RgbBitmap bmp, RgbDrawMode mode) {
+    public ImagePreviewWindow(String title, RgbImage bmp, RgbDrawMode mode) {
         this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, mode));
     }
 
@@ -161,15 +161,15 @@ public class ImagePreviewWindow extends JFrame {
      * @param title
      * @param bmp
      */
-    public ImagePreviewWindow(String title, GrayscaleBitmap bmp) {
+    public ImagePreviewWindow(String title, GrayscaleImage bmp) {
         this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE));
     }
 
-    public ImagePreviewWindow(String title, GrayscaleBitmap bmp, GrayscaleDrawMode mode) {
+    public ImagePreviewWindow(String title, GrayscaleImage bmp, GrayscaleDrawMode mode) {
         this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, mode));
     }
 
-    public ImagePreviewWindow(String title, GrayscaleBitmap bmp, List<FaceLocation> faces) {
+    public ImagePreviewWindow(String title, GrayscaleImage bmp, List<FaceLocation> faces) {
         this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE, faces));
     }
 

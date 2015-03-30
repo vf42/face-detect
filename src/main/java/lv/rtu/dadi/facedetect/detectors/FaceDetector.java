@@ -2,7 +2,7 @@ package lv.rtu.dadi.facedetect.detectors;
 
 import java.util.List;
 
-import lv.rtu.dadi.facedetect.bitmaps.Bitmap;
+import lv.rtu.dadi.facedetect.bitmaps.Image;
 
 /**
  * Interface for general face detection algorithm.
@@ -10,5 +10,5 @@ import lv.rtu.dadi.facedetect.bitmaps.Bitmap;
  *
  */
 public interface FaceDetector {
-    List<FaceLocation> detectFaces(Bitmap scene);
+    List<FaceLocation> detectFaces(Image scene);
 }
