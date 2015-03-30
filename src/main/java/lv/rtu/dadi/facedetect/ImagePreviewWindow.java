@@ -1,18 +1,21 @@
 package lv.rtu.dadi.facedetect;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
 import lv.rtu.dadi.facedetect.bitmaps.RgbBitmap;
+import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
  * Simple window to preview an image.
@@ -25,8 +28,16 @@ public class ImagePreviewWindow extends JFrame {
     /**
      * Select how to display RGB bitmap.
      */
-    public static enum RgbBitmapDrawMode {
+    public static enum RgbDrawMode {
         RGB, R, G, B, I;
+    }
+
+    /**
+     * Select how to display Grayscale bitmap.
+     */
+    public static enum GrayscaleDrawMode {
+        SIMPLE_POSITIVE, // Draw grayscale image using bitmap values [0..-1].
+        EXTENDED_HEIGHTMAP // Draw color image using bitmap values [-1..1] with Red/Blue shift for color values.
     }
 
     /**
@@ -38,28 +49,51 @@ public class ImagePreviewWindow extends JFrame {
         private static final long serialVersionUID = 1L;
 
         private final BufferedImage image;
+        private final List<FaceLocation> faces;
 
         public ImageCanvas(BufferedImage image) {
             this.image = image;
+            this.faces = null;
         }
 
-        public ImageCanvas(GrayscaleBitmap bmp) {
+        public ImageCanvas(GrayscaleBitmap bmp, GrayscaleDrawMode mode) {
+            this(bmp, mode, null);
+        }
+
+        public ImageCanvas(GrayscaleBitmap bmp, GrayscaleDrawMode mode, List<FaceLocation> faces) {
             this.image = new BufferedImage(bmp.getWidth(), bmp.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < bmp.getWidth(); x++) {
                 for (int y = 0; y < bmp.getHeight(); y++) {
-                    if (bmp.pixels[x][y] > 255 || bmp.pixels[x][y] < 0) {
+                    if (bmp.pixels[x][y] > 1.0 ||
+                            (mode == GrayscaleDrawMode.SIMPLE_POSITIVE && bmp.pixels[x][y] < 0.0) ||
+                            (mode == GrayscaleDrawMode.EXTENDED_HEIGHTMAP && bmp.pixels[x][y] < -1.0)) {
                         throw new RuntimeException("Invalid pixel value!");
                     }
-                    final int p = 0xFF << 24 |
-                            bmp.pixels[x][y] << 16 |
-                            bmp.pixels[x][y] << 8 |
-                            bmp.pixels[x][y];
-                    image.setRGB(x, y, p);
+                    if (mode == GrayscaleDrawMode.SIMPLE_POSITIVE) {
+                        final int ipix = (int) Math.round(bmp.pixels[x][y] * 255.0);
+                        final int p = 0xFF << 24 |
+                                ipix << 16 |
+                                ipix << 8 |
+                                ipix;
+                        image.setRGB(x, y, p);
+                    } else {
+                        final int green = bmp.pixels[x][y] >= 0
+                                ? (int) Math.round(bmp.pixels[x][y] * 255.0) : 0;
+                        final int red = 0;
+                        final int blue = bmp.pixels[x][y] <= 0
+                                ? (int) Math.round(bmp.pixels[x][y] * -255.0) : 0;
+                        final int p = 0xFF << 24 |
+                                red << 16 |
+                                green << 8 |
+                                blue;
+                        image.setRGB(x, y, p);
+                    }
                 }
             }
+            this.faces = faces;
         }
 
-        public ImageCanvas(RgbBitmap bmp, RgbBitmapDrawMode mode) {
+        public ImageCanvas(RgbBitmap bmp, RgbDrawMode mode) {
             this.image = new BufferedImage(bmp.getWidth(), bmp.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < bmp.getWidth(); x++) {
                 for (int y = 0; y < bmp.getHeight(); y++) {
@@ -88,11 +122,18 @@ public class ImagePreviewWindow extends JFrame {
                     image.setRGB(x, y, p);
                 }
             }
+            this.faces = null;
         }
 
         @Override
         public void paint(Graphics g) {
             g.drawImage(image, 0, 0, null);
+            if (faces != null) {
+                g.setColor(Color.GREEN);
+                for (final FaceLocation fl : faces) {
+                    g.drawRect(fl.x, fl.y, fl.w, fl.h);
+                }
+            }
         }
     }
 
@@ -111,7 +152,7 @@ public class ImagePreviewWindow extends JFrame {
      * @param bmp
      * @param mode
      */
-    public ImagePreviewWindow(String title, RgbBitmap bmp, RgbBitmapDrawMode mode) {
+    public ImagePreviewWindow(String title, RgbBitmap bmp, RgbDrawMode mode) {
         this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, mode));
     }
 
@@ -121,7 +162,15 @@ public class ImagePreviewWindow extends JFrame {
      * @param bmp
      */
     public ImagePreviewWindow(String title, GrayscaleBitmap bmp) {
-        this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp));
+        this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE));
+    }
+
+    public ImagePreviewWindow(String title, GrayscaleBitmap bmp, GrayscaleDrawMode mode) {
+        this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, mode));
+    }
+
+    public ImagePreviewWindow(String title, GrayscaleBitmap bmp, List<FaceLocation> faces) {
+        this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE, faces));
     }
 
     /**
@@ -134,8 +183,8 @@ public class ImagePreviewWindow extends JFrame {
     private ImagePreviewWindow(String title, int width, int height, Canvas canvas) {
         setTitle(title);
         setSize(width, height + 30);
-        //setLocationByPlatform(true);
-        setLocation(getScreenLocation());
+        setLocationByPlatform(true);
+//        setLocation(getScreenLocation());
         setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

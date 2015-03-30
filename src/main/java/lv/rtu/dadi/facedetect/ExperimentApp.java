@@ -8,10 +8,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import lv.rtu.dadi.facedetect.bitmaps.BitmapFilters;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleBitmap;
+import lv.rtu.dadi.facedetect.detectors.FaceDetector;
+import lv.rtu.dadi.facedetect.detectors.FaceLocation;
+import lv.rtu.dadi.facedetect.detectors.SimpleCorrelationDetector;
+import lv.rtu.dadi.facedetect.filters.GrayscaleFilter;
+import lv.rtu.dadi.facedetect.filters.GrayscaleFilterFactory;
 import magick.MagickException;
 
 import org.apache.commons.imaging.ImageReadException;
@@ -63,25 +68,42 @@ public class ExperimentApp {
       final GrayscaleBitmap orig = new GrayscaleBitmap(img);
       new ImagePreviewWindow("Original", orig);
 
-      final GrayscaleBitmap filt1 = orig.applyLinearFilter(BitmapFilters.LOWFREQ_3X3_1);
+      final GrayscaleBitmap filt1 = GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.LOWFREQ_3X3_1).apply(orig);
       new ImagePreviewWindow("Filtered 1", filt1);
-      final GrayscaleBitmap filt2 = filt1.applyMedianFilter(5);
+      final GrayscaleBitmap filt2 = GrayscaleFilterFactory.getMedianFilter(5).apply(filt1);
       new ImagePreviewWindow("Filtered 2", filt1);
-      new ImagePreviewWindow("Sobel from Filtered", filt2.applySobelEdgeDetection());
-      new ImagePreviewWindow("Sobel from Orig", orig.applySobelEdgeDetection());
+      final GrayscaleFilter sobel = GrayscaleFilterFactory.getSobelEdgeDetector();
+      new ImagePreviewWindow("Sobel from Filtered", sobel.apply(filt1));
+      new ImagePreviewWindow("Sobel from Orig", sobel.apply(orig));
     }
 
     private void simpleCorellation() throws ImageReadException, IOException {
-        final GrayscaleBitmap template = new GrayscaleBitmap(readImage("data/smiley/sample1.png"));
-        new ImagePreviewWindow("Template", template);
+//        final GrayscaleBitmap template = new GrayscaleBitmap(readImage("data/smiley/sample4.jpg"));
+//        final GrayscaleBitmap scene = new GrayscaleBitmap(readImage("data/smiley/scene1.bmp"));
 
-        final GrayscaleBitmap scene = new GrayscaleBitmap(readImage("data/smiley/scene1.bmp"));
-        new ImagePreviewWindow("Scene", scene);
+        final GrayscaleBitmap template = new GrayscaleBitmap(readImage("data/toys1/face1.bmp"));
+        final GrayscaleBitmap scene = new GrayscaleBitmap(readImage("data/toys1/scene5.bmp"));
+
+        final GrayscaleFilter preprocessor = GrayscaleFilterFactory.getFilterChain(
+//                GrayscaleFilterFactory.getMedianFilter(3),
+                GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.LOWFREQ_3X3_2),
+                GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.HIFREQ_3X3_1),
+                GrayscaleFilterFactory.getSobelEdgeDetector()
+//                GrayscaleFilterFactory.getPrevittEdgeDetector()
+                );
+
+        final GrayscaleBitmap procTempl = preprocessor.apply(template);
+        final GrayscaleBitmap procScene = preprocessor.apply(scene);
+
+        final FaceDetector detector = new SimpleCorrelationDetector(procTempl, 0.3);
+        final List<FaceLocation> faces = detector.detectFaces(procScene);
+        System.out.println(faces.size() + " match candidates detected");
+        new ImagePreviewWindow("Result", scene, faces);
     }
 
     public static void main(String[] args) throws MagickException, ImageReadException, IOException {
         final ExperimentApp expApp = new ExperimentApp();
-        //expApp.testFilters();
+//        expApp.testFilters();
         expApp.simpleCorellation();
     }
 }
