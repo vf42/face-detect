@@ -3,11 +3,11 @@ package lv.rtu.dadi.facedetect.detectors;
 import java.util.LinkedList;
 import java.util.List;
 
-import lv.rtu.dadi.facedetect.GlobalSettings;
 import lv.rtu.dadi.facedetect.ImagePreviewWindow;
 import lv.rtu.dadi.facedetect.ImagePreviewWindow.GrayscaleDrawMode;
-import lv.rtu.dadi.facedetect.bitmaps.Image;
+import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
+import lv.rtu.dadi.facedetect.bitmaps.Image;
 import lv.rtu.dadi.facedetect.filters.GrayscaleFilter;
 import lv.rtu.dadi.facedetect.filters.GrayscaleFilterFactory;
 
@@ -40,7 +40,7 @@ public class SimpleCorrelationDetector implements FaceDetector {
         }
         final List<FaceLocation> result = new LinkedList<FaceLocation>();
         final GrayscaleImage ncc = nccFilter.apply((GrayscaleImage) scene);
-        if (GlobalSettings.DEBUG) {
+        if (Settings.DEBUG) {
             new ImagePreviewWindow("Template", template);
             new ImagePreviewWindow("Scene", (GrayscaleImage) scene);
             new ImagePreviewWindow("NCC map", ncc, GrayscaleDrawMode.EXTENDED_HEIGHTMAP);

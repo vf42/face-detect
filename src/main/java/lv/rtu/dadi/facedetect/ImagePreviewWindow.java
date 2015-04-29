@@ -57,11 +57,11 @@ public class ImagePreviewWindow extends JFrame {
         }
 
         public ImageCanvas(GrayscaleImage bmp, GrayscaleDrawMode mode) {
-            this(bmp, mode, null);
+            this(bmp, mode, null, 1);
         }
 
-        public ImageCanvas(GrayscaleImage bmp, GrayscaleDrawMode mode, List<FaceLocation> faces) {
-            this.image = new BufferedImage(bmp.getWidth(), bmp.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        public ImageCanvas(GrayscaleImage bmp, GrayscaleDrawMode mode, List<FaceLocation> faces, int scale) {
+            this.image = new BufferedImage(bmp.getWidth() * scale, bmp.getHeight() * scale, BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < bmp.getWidth(); x++) {
                 for (int y = 0; y < bmp.getHeight(); y++) {
                     if (bmp.pixels[x][y] > 1.0 ||
@@ -75,7 +75,12 @@ public class ImagePreviewWindow extends JFrame {
                                 ipix << 16 |
                                 ipix << 8 |
                                 ipix;
-                        image.setRGB(x, y, p);
+                        final int ix = x * scale, iy = y * scale;
+                        for (int a = 0; a < scale; a++) {
+                            for (int b = 0; b < scale; b++) {
+                                image.setRGB(ix+a, iy+b, p);
+                            }
+                        }
                     } else {
                         final int green = bmp.pixels[x][y] >= 0
                                 ? (int) Math.round(bmp.pixels[x][y] * 255.0) : 0;
@@ -86,7 +91,12 @@ public class ImagePreviewWindow extends JFrame {
                                 red << 16 |
                                 green << 8 |
                                 blue;
-                        image.setRGB(x, y, p);
+                        final int ix = x * scale, iy = y * scale;
+                        for (int a = 0; a < scale; a++) {
+                            for (int b = 0; b < scale; b++) {
+                                image.setRGB(ix+a, iy+b, p);
+                            }
+                        }
                     }
                 }
             }
@@ -170,7 +180,17 @@ public class ImagePreviewWindow extends JFrame {
     }
 
     public ImagePreviewWindow(String title, GrayscaleImage bmp, List<FaceLocation> faces) {
-        this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE, faces));
+        this(title, bmp.getWidth(), bmp.getHeight(), new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE, faces, 1));
+    }
+
+    public ImagePreviewWindow(String title, GrayscaleImage bmp, List<FaceLocation> faces, int scale) {
+        this(title, bmp.getWidth() * scale, bmp.getHeight() * scale,
+                new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE, faces, scale));
+    }
+
+    public ImagePreviewWindow(String title, GrayscaleImage bmp, int scale) {
+        this(title, bmp.getWidth() * scale, bmp.getHeight() * scale,
+                new ImageCanvas(bmp, GrayscaleDrawMode.SIMPLE_POSITIVE, null, scale));
     }
 
     /**
@@ -183,8 +203,12 @@ public class ImagePreviewWindow extends JFrame {
     private ImagePreviewWindow(String title, int width, int height, Canvas canvas) {
         setTitle(title);
         setSize(width, height + 30);
-        setLocationByPlatform(true);
-//        setLocation(getScreenLocation());
+        if (0 == Settings.getPreviewWindowLocationMode()) {
+            setLocationByPlatform(true);
+        } else {
+            // TODO: Use 1st/2nd monitor depending on mode.
+            setLocation(getScreenLocation());
+        }
         setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

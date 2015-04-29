@@ -222,6 +222,12 @@ public final class GrayscaleFilterFactory {
         };
     }
 
+    /**
+     * Create a filter that is combined from a sequence of filters.
+     *
+     * @param _filters
+     * @return
+     */
     public static GrayscaleFilter getFilterChain(GrayscaleFilter... _filters) {
         return new GrayscaleFilter() {
             private final GrayscaleFilter[] filters = _filters;
@@ -230,6 +236,52 @@ public final class GrayscaleFilterFactory {
                 GrayscaleImage result = source;
                 for (final GrayscaleFilter f : filters) {
                     result = f.apply(result);
+                }
+                return result;
+            }
+        };
+    }
+
+    /**
+     * Create a new image containing median values of square regions of the source image.
+     * @param _sqSize
+     * @param _shift
+     * @param median - if true, will use median, average otherwise.
+     * @return
+     */
+    public static GrayscaleFilter getRegionFilter(int _sqSize, int _shift, boolean median) {
+        return new GrayscaleFilter() {
+            private final int sqSize = _sqSize;
+            private final int shift = _shift;
+            @Override
+            public GrayscaleImage apply(GrayscaleImage source) {
+                final int resultWidth = source.getWidth() / sqSize;
+                final int resultHeight = source.getHeight() / sqSize;
+                final GrayscaleImage result = new GrayscaleImage(resultWidth, resultHeight);
+                for (int rx = 0; rx < result.getWidth(); rx++) {
+                    for (int ry = 0; ry < result.getHeight(); ry++) {
+                        final int sx = rx * sqSize + shift;
+                        final int sy = ry * sqSize + shift;
+                        final double[] values = new double[sqSize * sqSize];
+                        int idx = 0;
+                        for (int a = 0; a < sqSize; a++) {
+                            for (int b = 0; b < sqSize; b++) {
+                                if (sx + a < source.getWidth() && sy + b < source.getHeight()) {
+                                    values[idx++] = source.pixels[sx+a][sy+b];
+                                }
+                            }
+                        }
+                        if (median) {
+                            Arrays.sort(values);
+                            result.pixels[rx][ry] = values[idx / 2];
+                        } else {
+                            double sum = values[0];
+                            for (int i = 1; i < idx; i++) {
+                                sum += values[i];
+                            }
+                            result.pixels[rx][ry] = sum / idx;
+                        }
+                    }
                 }
                 return result;
             }
