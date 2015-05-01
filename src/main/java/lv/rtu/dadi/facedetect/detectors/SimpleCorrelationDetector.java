@@ -7,7 +7,6 @@ import lv.rtu.dadi.facedetect.ImagePreviewWindow;
 import lv.rtu.dadi.facedetect.ImagePreviewWindow.GrayscaleDrawMode;
 import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
-import lv.rtu.dadi.facedetect.bitmaps.Image;
 import lv.rtu.dadi.facedetect.filters.GrayscaleFilter;
 import lv.rtu.dadi.facedetect.filters.GrayscaleFilterFactory;
 
@@ -34,15 +33,12 @@ public class SimpleCorrelationDetector implements FaceDetector {
     }
 
     @Override
-    public List<FaceLocation> detectFaces(Image scene) {
-        if (!(scene instanceof GrayscaleImage)) {
-            throw new RuntimeException("Only Grayscale Bitmaps are supported!");
-        }
+    public List<FaceLocation> detectFaces(GrayscaleImage scene) {
         final List<FaceLocation> result = new LinkedList<FaceLocation>();
-        final GrayscaleImage ncc = nccFilter.apply((GrayscaleImage) scene);
+        final GrayscaleImage ncc = nccFilter.apply(scene);
         if (Settings.DEBUG) {
             new ImagePreviewWindow("Template", template);
-            new ImagePreviewWindow("Scene", (GrayscaleImage) scene);
+            new ImagePreviewWindow("Scene", scene);
             new ImagePreviewWindow("NCC map", ncc, GrayscaleDrawMode.EXTENDED_HEIGHTMAP);
         }
         for (int x = 0; x < ncc.getWidth(); x++) {

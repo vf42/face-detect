@@ -37,6 +37,10 @@ public class GrayscaleImage implements Image {
         }
     }
 
+    public GrayscaleImage(double[][] pixels) {
+        this.pixels = pixels;
+    }
+
     public GrayscaleImage(int width, int height) {
         this(width, height, (short) 0);
     }

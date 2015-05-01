@@ -287,4 +287,35 @@ public final class GrayscaleFilterFactory {
             }
         };
     }
+
+    /**
+     * Returns a filter that will scan the values and normalize them to be in [0..1] range.
+     * @return
+     */
+    public static GrayscaleFilter getValueNormalizerFilter() {
+        return new GrayscaleFilter() {
+
+            @Override
+            public GrayscaleImage apply(GrayscaleImage source) {
+                // First, find min and max pixel values.
+                double min = source.pixels[0][0];
+                double max = min;
+                for (int i = 0; i < source.getWidth(); i++) {
+                    for (int j = 0; j < source.getHeight(); j++) {
+                        if (source.pixels[i][j] < min) min = source.pixels[i][j];
+                        if (source.pixels[i][j] > max) max = source.pixels[i][j];
+                    }
+                }
+                final double range = max - min;
+                // Then recalculate all the pixel values so that min is 0 and max is 1.
+                final GrayscaleImage result = new GrayscaleImage(source.getWidth(), source.getHeight());
+                for (int i = 0; i < source.getWidth(); i++) {
+                    for (int j = 0; j < source.getHeight(); j++) {
+                        result.pixels[i][j] = (source.pixels[i][j] - min) / range;
+                    }
+                }
+                return result;
+            }
+        };
+    }
 }
