@@ -1,5 +1,7 @@
 package lv.rtu.dadi.facedetect.detectors;
 
+import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
+
 /**
  * Container for face location data.
  * @author fedorovvadim
@@ -19,4 +21,21 @@ public class FaceLocation {
         this.h = h;
     }
 
+    public FaceLocation(SubWindow sw) {
+        this.x = sw.x;
+        this.y = sw.y;
+        this.w = sw.w;
+        this.h = sw.h;
+    }
+
+    /**
+     * Return the overlap area size between two faces.
+     * @param f2
+     * @return
+     */
+    public int overlap(FaceLocation f2) {
+        final int xOverlap = Math.max(0, Math.min(this.x + this.w, f2.x + f2.w) - Math.max(this.x, f2.x));
+        final int yOverlap = Math.max(0, Math.min(this.y + this.h, f2.y + f2.h) - Math.max(this.y, f2.y));
+        return xOverlap * yOverlap;
+    }
 }

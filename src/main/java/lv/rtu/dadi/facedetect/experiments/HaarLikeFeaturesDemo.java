@@ -28,7 +28,7 @@ public class HaarLikeFeaturesDemo {
     }
 
     public static void haar1(IntegralImage ii) {
-        final HaarLikeFeature hlf = new TwoRectHorizontalHLF(FEATURE_SIZE);
+        final HaarLikeFeature hlf = new TwoRectHorizontalHLF(FEATURE_SIZE, FEATURE_SIZE);
         final double[][] haarResult = hlf.regionScan(ii, 0, 0, ii.getWidth(), ii.getHeight());
         final GrayscaleImage output =
                 GrayscaleFilterFactory.getValueNormalizerFilter().apply(new GrayscaleImage(haarResult));
@@ -36,7 +36,7 @@ public class HaarLikeFeaturesDemo {
     }
 
     public static void haar2(IntegralImage ii) {
-        final HaarLikeFeature hlf = new TwoRectVerticalHLF(FEATURE_SIZE);
+        final HaarLikeFeature hlf = new TwoRectVerticalHLF(16, 6);
         final double[][] haarResult = hlf.regionScan(ii, 0, 0, ii.getWidth(), ii.getHeight());
         final GrayscaleImage output =
                 GrayscaleFilterFactory.getValueNormalizerFilter().apply(new GrayscaleImage(haarResult));
@@ -44,7 +44,7 @@ public class HaarLikeFeaturesDemo {
     }
 
     public static void haar3(IntegralImage ii) {
-        final HaarLikeFeature hlf = new ThreeRectHorizontalHLF(FEATURE_SIZE);
+        final HaarLikeFeature hlf = new ThreeRectHorizontalHLF(FEATURE_SIZE, FEATURE_SIZE);
         final double[][] haarResult = hlf.regionScan(ii, 0, 0, ii.getWidth(), ii.getHeight());
         final GrayscaleImage output =
                 GrayscaleFilterFactory.getValueNormalizerFilter().apply(new GrayscaleImage(haarResult));
@@ -52,7 +52,7 @@ public class HaarLikeFeaturesDemo {
     }
 
     public static void haar4(IntegralImage ii) {
-        final HaarLikeFeature hlf = new FourRectHLF(FEATURE_SIZE);
+        final HaarLikeFeature hlf = new FourRectHLF(FEATURE_SIZE, FEATURE_SIZE);
         final double[][] haarResult = hlf.regionScan(ii, 0, 0, ii.getWidth(), ii.getHeight());
         final GrayscaleImage output =
                 GrayscaleFilterFactory.getValueNormalizerFilter().apply(new GrayscaleImage(haarResult));
@@ -65,7 +65,7 @@ public class HaarLikeFeaturesDemo {
      * @param ii
      */
     public static void twoRectOverlay(GrayscaleImage scene, IntegralImage ii) {
-        final HaarLikeFeature hlf = new TwoRectVerticalHLF(FEATURE_SIZE);
+        final HaarLikeFeature hlf = new TwoRectVerticalHLF(FEATURE_SIZE * 2, FEATURE_SIZE);
         final double[][] haarResult = hlf.regionScan(ii, 0, 0, ii.getWidth(), ii.getHeight());
         final GrayscaleImage output =
                 GrayscaleFilterFactory.getValueNormalizerFilter().apply(new GrayscaleImage(haarResult));
@@ -73,10 +73,10 @@ public class HaarLikeFeaturesDemo {
             @Override
             public List<FaceLocation> detectFaces(GrayscaleImage scene) {
                 final List<FaceLocation> faces = new LinkedList<>();
-                for (int i = 0; i < scene.getWidth() - hlf.size; i++) {
-                    for (int j = 0; j < scene.getHeight() - hlf.size; j++) {
+                for (int i = 0; i < scene.getWidth() - hlf.width; i++) {
+                    for (int j = 0; j < scene.getHeight() - hlf.height; j++) {
                         if (output.pixels[i][j] > 0.6) {
-                            faces.add(new FaceLocation(i, j, hlf.size, hlf.size));
+                            faces.add(new FaceLocation(i, j, hlf.width, hlf.height));
                         }
                     }
                 }
@@ -93,10 +93,10 @@ public class HaarLikeFeaturesDemo {
         new ImagePreviewWindow("Original", scene);
         final IntegralImage ii = new IntegralImage(scene);
 //        haar1(ii);
-//        haar2(ii);
+        haar2(ii);
 //        haar3(ii);
 //        haar4(ii);
-        twoRectOverlay(scene, ii);
+//        twoRectOverlay(scene, ii);
     }
 
 }

@@ -106,7 +106,7 @@ public final class GrayscaleFilterFactory {
 
     /**
      * Returns median filter instance.
-     * @param size
+     * @param width
      * @return
      */
     public static GrayscaleFilter getMedianFilter(int _filterSize) {

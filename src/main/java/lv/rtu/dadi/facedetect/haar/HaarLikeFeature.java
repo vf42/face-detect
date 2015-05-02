@@ -9,13 +9,15 @@ import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
  */
 public abstract class HaarLikeFeature {
 
-    public final int size; // Assuming square-sized features.
+    public final int width;
+    public final int height;
 
-    public HaarLikeFeature(int size) {
-        if (size % 2 != 0) {
+    public HaarLikeFeature(int width, int height) {
+        if (width % 2 != 0 && height % 2 != 0) {
             throw new RuntimeException("Feature size must be multiple of 2!");
         }
-        this.size = size;
+        this.width = width;
+        this.height = height;
     }
 
     /**
@@ -37,10 +39,10 @@ public abstract class HaarLikeFeature {
      * @return
      */
     public double[][] regionScan(IntegralImage ii, int x, int y, int w, int h) {
-        final double[][] result = new double[w - size][h - size];
-        for (int i = 0; i < w - size; i++) {
-            for (int j = 0; j < h - size; j++) {
-                if (x + i + size < ii.getWidth() && y + j + size < ii.getHeight()) {
+        final double[][] result = new double[w - width][h - height];
+        for (int i = 0; i < w - width; i++) {
+            for (int j = 0; j < h - height; j++) {
+                if (x + i + width < ii.getWidth() && y + j + height < ii.getHeight()) {
                     result[i][j] = getFeatureValue(ii, x + i, y + j);
                 }
             }
