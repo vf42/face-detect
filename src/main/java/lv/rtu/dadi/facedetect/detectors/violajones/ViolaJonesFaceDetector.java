@@ -7,12 +7,12 @@ import java.util.List;
 
 import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
-import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 import lv.rtu.dadi.facedetect.haar.FourRectHLF;
 import lv.rtu.dadi.facedetect.haar.HaarLikeFeature;
+import lv.rtu.dadi.facedetect.haar.IntegralImage;
 import lv.rtu.dadi.facedetect.haar.ThreeRectHorizontalHLF;
 import lv.rtu.dadi.facedetect.haar.TwoRectHorizontalHLF;
 import lv.rtu.dadi.facedetect.haar.TwoRectVerticalHLF;

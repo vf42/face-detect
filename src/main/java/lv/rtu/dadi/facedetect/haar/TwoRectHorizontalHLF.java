@@ -1,6 +1,5 @@
 package lv.rtu.dadi.facedetect.haar;
 
-import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 
 /**
  * First two-rect feature.
@@ -9,18 +8,11 @@ import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
  */
 public final class TwoRectHorizontalHLF extends HaarLikeFeature {
 
-    private final int width_2;
-
     public TwoRectHorizontalHLF(int width, int height) {
-        super(width, height);
-        this.width_2 = width / 2;
-    }
-
-    @Override
-    public double getFeatureValue(IntegralImage ii, int x, int y) {
-        final double val1 = ii.getRectValue(x, y, width_2, height);
-        final double val2 = ii.getRectValue(x + width_2, y, width_2, height);
-        return val2 - val1;
+        super(new HaarRectangle[] {
+                new HaarRectangle(0, 0, width/2, height, -1.0),
+                new HaarRectangle(width/2, 0, width, height, 1.0)
+        });
     }
 
 }

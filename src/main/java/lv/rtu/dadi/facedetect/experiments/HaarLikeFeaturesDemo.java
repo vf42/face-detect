@@ -7,12 +7,12 @@ import java.util.List;
 import lv.rtu.dadi.facedetect.ImagePreviewWindow;
 import lv.rtu.dadi.facedetect.ImageUtils;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
-import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 import lv.rtu.dadi.facedetect.filters.GrayscaleFilterFactory;
 import lv.rtu.dadi.facedetect.haar.FourRectHLF;
 import lv.rtu.dadi.facedetect.haar.HaarLikeFeature;
+import lv.rtu.dadi.facedetect.haar.IntegralImage;
 import lv.rtu.dadi.facedetect.haar.ThreeRectHorizontalHLF;
 import lv.rtu.dadi.facedetect.haar.TwoRectHorizontalHLF;
 import lv.rtu.dadi.facedetect.haar.TwoRectVerticalHLF;
@@ -92,10 +92,10 @@ public class HaarLikeFeaturesDemo {
         final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage("data\\MIT-CMU\\test-low\\trek-trio.gif"));
         new ImagePreviewWindow("Original", scene);
         final IntegralImage ii = new IntegralImage(scene);
-//        haar1(ii);
+        haar1(ii);
         haar2(ii);
-//        haar3(ii);
-//        haar4(ii);
+        haar3(ii);
+        haar4(ii);
 //        twoRectOverlay(scene, ii);
     }
 

@@ -1,6 +1,9 @@
-package lv.rtu.dadi.facedetect.bitmaps;
+package lv.rtu.dadi.facedetect.haar;
 
 import java.awt.image.BufferedImage;
+
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
+import lv.rtu.dadi.facedetect.bitmaps.Image;
 
 /**
  * Integral image implementation for Haar-like feature computation.
@@ -34,6 +37,11 @@ public class IntegralImage implements Image {
      */
     public double getRectValue(int x, int y, int w, int h) {
         return values[x + w][y + h] + values[x][y] - values[x + w][y] - values[x][y + h];
+    }
+
+    public double getRectValue(int baseX, int baseY, HaarRectangle rect) {
+        return values[baseX + rect.x1][baseY + rect.y1] + values[baseX + rect.x0][baseY + rect.y0]
+                - values[baseX + rect.x1][baseY + rect.y0] - values[baseX + rect.x0][baseY + rect.y1];
     }
 
     @Override
