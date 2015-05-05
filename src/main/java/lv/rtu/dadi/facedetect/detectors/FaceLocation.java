@@ -38,4 +38,13 @@ public class FaceLocation {
         final int yOverlap = Math.max(0, Math.min(this.y + this.h, f2.y + f2.h) - Math.max(this.y, f2.y));
         return xOverlap * yOverlap;
     }
+
+    public int centerX() {
+        return x + w / 2;
+    }
+
+    public int centerY() {
+        return y + h / 2;
+    }
+
 }

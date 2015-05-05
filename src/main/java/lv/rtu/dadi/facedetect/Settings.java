@@ -4,7 +4,7 @@ public class Settings {
 
     public static final boolean DEBUG = true;
 
-    private static final int PREVIEW_WINDOW_LOCATION_MODE = 0;
+    private static final int PREVIEW_WINDOW_LOCATION_MODE = 1;
 
     public static int getPreviewWindowLocationMode() {
         return PREVIEW_WINDOW_LOCATION_MODE;

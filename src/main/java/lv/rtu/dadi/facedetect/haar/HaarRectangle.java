@@ -17,4 +17,19 @@ public class HaarRectangle {
         this.weight = weight;
     }
 
+    public HaarRectangle scaled(double factor) {
+        if (factor != 1.0) {
+            return new HaarRectangle(
+                    (int) Math.floor(x0 * factor),
+                    (int) Math.floor(y0 * factor),
+                    (int) Math.floor(x1 * factor),
+                    (int) Math.floor(y1 * factor),
+//                    (int) Math.floor(x0*factor + (x1 - x0) * factor),
+//                    (int) Math.floor(y0*factor + (y1 - y0) * factor),
+                    weight);
+        } else {
+            return this;
+        }
+    }
+
 }

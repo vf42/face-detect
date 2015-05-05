@@ -13,4 +13,12 @@ public class SubWindow {
         this.w = w;
         this.h = h;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder(Integer.toString(x)).append(' ')
+            .append(Integer.toString(y)).append(' ')
+            .append(Integer.toString(w)).append(' ')
+            .append(Integer.toString(h)).toString();
+    }
 }
