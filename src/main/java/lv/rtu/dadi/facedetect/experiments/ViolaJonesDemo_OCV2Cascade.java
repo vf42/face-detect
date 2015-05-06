@@ -11,8 +11,8 @@ import lv.rtu.dadi.facedetect.ImageUtils;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
-import lv.rtu.dadi.facedetect.detectors.violajones.OpenCV2DetectionCascade;
-import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesFaceDetector;
+import lv.rtu.dadi.facedetect.detectors.violajones.SimpleVJFaceDetector;
+import lv.rtu.dadi.facedetect.detectors.violajones.cascades.OpenCV2DetectionCascade;
 
 import org.apache.commons.imaging.ImageReadException;
 
@@ -32,7 +32,7 @@ public class ViolaJonesDemo_OCV2Cascade {
       final long startTime = System.nanoTime();
 
       // Using the OpenCV2 cascade.
-      final FaceDetector detector = new ViolaJonesFaceDetector(
+      final FaceDetector detector = new SimpleVJFaceDetector(
               new OpenCV2DetectionCascade(
                       new FileInputStream(cascadeFile)));
 

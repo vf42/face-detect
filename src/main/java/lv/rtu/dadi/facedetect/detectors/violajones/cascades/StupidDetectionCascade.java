@@ -1,10 +1,11 @@
-package lv.rtu.dadi.facedetect.detectors.violajones;
+package lv.rtu.dadi.facedetect.detectors.violajones.cascades;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
+import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesStats;
 import lv.rtu.dadi.facedetect.haar.FourRectHLF;
 import lv.rtu.dadi.facedetect.haar.HaarLikeFeature;
 import lv.rtu.dadi.facedetect.haar.ThreeRectHorizontalHLF;
@@ -67,7 +68,7 @@ public class StupidDetectionCascade implements DetectionCascade {
     }
 
     @Override
-    public boolean testWindow(IntegralImage ii, SubWindow sw) {
+    public boolean testWindow(IntegralImage ii, SubWindow sw, ViolaJonesStats stats) {
         for (final WeakClassifier wc : cascade) {
             if (!wc.testWindow(ii, sw)) {
                 return false;

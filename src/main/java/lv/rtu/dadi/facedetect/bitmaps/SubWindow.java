@@ -21,4 +21,9 @@ public class SubWindow {
             .append(Integer.toString(w)).append(' ')
             .append(Integer.toString(h)).toString();
     }
+
+    @Override
+    public SubWindow clone() {
+        return new SubWindow(x, y, w, h);
+    }
 }

@@ -40,16 +40,18 @@ public class ImagePreviewWindow extends JFrame {
         EXTENDED_HEIGHTMAP // Draw color image using bitmap values [-1..1] with Red/Blue shift for color values.
     }
 
+    protected final Canvas canvas;
+
     /**
      * Drawable component for image.
      * @author fedorovvadim
      *
      */
-    private static class ImageCanvas extends Canvas {
+    protected static class ImageCanvas extends Canvas {
         private static final long serialVersionUID = 1L;
 
-        private final BufferedImage image;
-        private final List<FaceLocation> faces;
+        protected final BufferedImage image;
+        protected final List<FaceLocation> faces;
 
         public ImageCanvas(BufferedImage image) {
             this.image = image;
@@ -200,7 +202,8 @@ public class ImagePreviewWindow extends JFrame {
      * @param height
      * @param canvas
      */
-    private ImagePreviewWindow(String title, int width, int height, Canvas canvas) {
+    protected ImagePreviewWindow(String title, int width, int height, Canvas canvas) {
+        this.canvas = canvas;
         setTitle(title);
         setSize(width, height + 30);
         if (0 == Settings.getPreviewWindowLocationMode()) {

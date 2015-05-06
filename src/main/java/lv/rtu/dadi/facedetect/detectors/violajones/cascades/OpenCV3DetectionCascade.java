@@ -1,80 +1,94 @@
-package lv.rtu.dadi.facedetect.detectors.violajones;
+package lv.rtu.dadi.facedetect.detectors.violajones.cascades;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import lv.rtu.dadi.facedetect.ImageScanVisualizer;
+import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
+import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesStats;
 import lv.rtu.dadi.facedetect.haar.HaarLikeFeature;
 import lv.rtu.dadi.facedetect.haar.HaarRectangle;
 
 /**
- * The HAAR cascade using classifier cascade XML file format found in JViolaJones distribution.
+ * The HAAR cascade using classifier cascade XML file format found in OpenCV 3.0RC1 distribution.
  * @author fedorovvadim
  *
  */
-public class OpenCV2DetectionCascade implements DetectionCascade {
+public class OpenCV3DetectionCascade implements DetectionCascade {
+
+    private String stageType; // Always 'BOOST'.
+    private String featureType; // ALways 'HAAR'.
 
     private int height;
     private int width;
 
+    private int maxWeakCount;
+    private int maxCatCount;
+    private int stageNum;
+
     private final List<Stage> stages = new ArrayList<>();
+    private final List<HaarLikeFeature> features = new ArrayList<>();
+
+    private ImageScanVisualizer visual;
 
     private class Stage {
+        int maxWeakCount;
         double stageThreshold;
-        int parent;
-        int next;
-        List<Tree> trees = new ArrayList<>();
+        List<WeakClassifier> classifiers = new ArrayList<>();
 
-        boolean testWindow(IntegralImage ii, SubWindow sw, double scale) {
+        public boolean testWindow(IntegralImage ii, SubWindow sw, double scale, ViolaJonesStats stats) {
             double stageSum = 0.0;
-            // Sum up tree values.
-            for (final Tree tree : trees) {
-                stageSum += tree.getTreeValue(ii, sw, scale);
+            for (final WeakClassifier wcl : classifiers) {
+                final HaarLikeFeature feature = features.get(wcl.featureId);
+                if (stats != null) {
+                    stats.addFeature(wcl.featureId);
+                }
+                if (Settings.DEBUG && visual != null) {
+                    visual.setFeature(feature);
+                }
+                final double featureResp = feature.getFeatureValue(ii, sw.x, sw.y, scale);
+                if (featureResp <= wcl.threshold) {
+                    stageSum += wcl.leafValues[0];
+                } else {
+                    stageSum += wcl.leafValues[1];
+                }
             }
-            return stageSum > stageThreshold;
-        }
-    }
-
-    private class Tree {
-        TreeNode root; // Assuming all trees having one node for now.
-
-        double getTreeValue(IntegralImage ii, SubWindow sw, double scale) {
-            return root.getNodeValue(ii, sw, scale);
-        }
-    }
-
-    private class TreeNode {
-        HaarLikeFeature feature;
-        double threshold;
-        double leftVal;
-        double rightVal;
-
-        double getNodeValue(IntegralImage ii, SubWindow sw, double scale) {
-            final double featureResp = feature.getFeatureValue(ii, sw.x, sw.y, scale);
-            if (featureResp <= threshold) {
-                return leftVal;
+            if (stageSum <= stageThreshold) {
+                return false;
             } else {
-                return rightVal;
+                return true;
             }
         }
+
+    }
+
+    private class WeakClassifier {
+        int leftNode;
+        int rightNode;
+        int featureId;
+        double threshold;
+        double[] leafValues;
     }
 
     @Override
-    public boolean testWindow(IntegralImage ii, SubWindow sw) {
-        final int idx = 0;
+    public boolean testWindow(IntegralImage ii, SubWindow sw, ViolaJonesStats stats) {
+        int idx = 0;
         final double scale = sw.w / (double) this.width; // Assuming fixed aspect ratio.
         for (final Stage stage : stages) {
-            if (!stage.testWindow(ii, sw, scale)) {
+            if (!stage.testWindow(ii, sw, scale, stats)) {
                 return false;
             }
+            if (++idx > 36) break;
         }
         return true;
     }
@@ -89,11 +103,21 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
         return height;
     }
 
+    @Override
+    public void setVisual(ImageScanVisualizer visual) {
+        this.visual = visual;
+    }
+
+    @Override
+    public int getFeatureCount() {
+        return features.size();
+    }
+
     /*
-     * Only parsing code below.
+     * Parsing code below.
      */
 
-    public OpenCV2DetectionCascade(InputStream source) throws XMLStreamException  {
+    public OpenCV3DetectionCascade(InputStream source) throws XMLStreamException  {
         parseCascade(source);
     }
 
@@ -114,6 +138,9 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
                 case "stages":
                     parseStages(reader);
                     break;
+                case "features":
+                    parseFeatures(reader);
+                    break;
                 }
                 break;
 
@@ -123,10 +150,26 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
 
             case XMLStreamConstants.END_ELEMENT:
                 switch (reader.getLocalName()) {
-                case "size":
-                    final String[] split = tagText.split(" ");
-                    this.width = Integer.parseInt(split[0]);
-                    this.height= Integer.parseInt(split[1]);
+                case "stageType":
+                    this.stageType = tagText;
+                    break;
+                case "featureType":
+                    this.featureType = tagText;
+                    break;
+                case "width":
+                    this.width = Integer.parseInt(tagText);
+                    break;
+                case "height":
+                    this.height= Integer.parseInt(tagText);
+                    break;
+                case "maxWeakCount":
+                    this.maxWeakCount = Integer.parseInt(tagText);
+                    break;
+                case "maxCatCount":
+                    this.maxCatCount = Integer.parseInt(tagText);
+                    break;
+                case "stageNum":
+                    this.stageNum = Integer.parseInt(tagText);
                     break;
                 }
             }
@@ -149,8 +192,9 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
                 case "_":
                     currStage = new Stage(); // Start new stage.
                     break;
-                case "trees":
-                    parseTrees(reader, currStage);
+                case "weakClassifiers":
+                    parseClassifiers(reader, currStage);
+                    break;
                 }
                 break;
 
@@ -165,90 +209,11 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
                 case "_":
                     stages.add(currStage);
                     break;
+                case "maxWeakCount":
+                    currStage.maxWeakCount = Integer.parseInt(tagText);
+                    break;
                 case "stageThreshold":
                     currStage.stageThreshold = Double.parseDouble(tagText);
-                    break;
-                case "parent":
-                    currStage.parent = Integer.parseInt(tagText);
-                    break;
-                case "next":
-                    currStage.next = Integer.parseInt(tagText);
-                    break;
-                }
-                break;
-            }
-        }
-    }
-
-    private void parseTrees(XMLStreamReader reader, Stage currStage) throws XMLStreamException {
-        Tree currTree = null;
-        String tagText = null;
-        while (reader.hasNext()) {
-            final int event = reader.next();
-            switch(event) {
-            case XMLStreamConstants.START_ELEMENT:
-                switch (reader.getLocalName()) {
-                case "_":
-                    if (currTree == null) {
-                        // First <_>.
-                        currTree = new Tree();
-                    } else {
-                        // Second <_>.
-                        parseTreeNode(reader, currTree);
-                    }
-                    break;
-                }
-                break;
-
-            case XMLStreamConstants.CHARACTERS:
-                tagText = reader.getText().trim();
-                break;
-
-            case XMLStreamConstants.END_ELEMENT:
-                switch (reader.getLocalName()) {
-                case "trees":
-                    return; // Get back.
-                case "_":
-                    currStage.trees.add(currTree);
-                    currTree = null;
-                    break;
-                }
-                break;
-            }
-        }
-    }
-
-    private void parseTreeNode(XMLStreamReader reader, Tree currTree) throws XMLStreamException {
-        final TreeNode currNode = new TreeNode();
-        currTree.root = currNode;
-        String tagText = null;
-        while (reader.hasNext()) {
-            final int event = reader.next();
-            switch(event) {
-            case XMLStreamConstants.START_ELEMENT:
-                switch (reader.getLocalName()) {
-                case "feature":
-                    parseFeature(reader, currNode);
-                    break;
-                }
-                break;
-
-            case XMLStreamConstants.CHARACTERS:
-                tagText = reader.getText().trim();
-                break;
-
-            case XMLStreamConstants.END_ELEMENT:
-                switch (reader.getLocalName()) {
-                case "_":
-                    return; // Get back.
-                case "threshold":
-                    currNode.threshold = Double.parseDouble(tagText);
-                    break;
-                case "left_val":
-                    currNode.leftVal = Double.parseDouble(tagText);
-                    break;
-                case "right_val":
-                    currNode.rightVal = Double.parseDouble(tagText);
                     break;
                 }
                 break;
@@ -257,11 +222,60 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
     }
 
     /**
-     * Parse the <feature> section.
+     * Parse the classifiers for the stage.
+     * @param source
+     * @param currStage
+     * @throws XMLStreamException
+     */
+    private void parseClassifiers(XMLStreamReader reader, Stage currStage) throws XMLStreamException {
+        WeakClassifier currClassifier = null;
+        String tagText = null;
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            switch(event) {
+            case XMLStreamConstants.START_ELEMENT:
+                switch (reader.getLocalName()) {
+                case "_":
+                    currClassifier = new WeakClassifier();
+                    break;
+                }
+                break;
+
+            case XMLStreamConstants.CHARACTERS:
+                tagText = reader.getText().trim();
+                break;
+
+            case XMLStreamConstants.END_ELEMENT:
+                switch (reader.getLocalName()) {
+                case "weakClassifiers":
+                    return; // Get back.
+                case "_":
+                    currStage.classifiers.add(currClassifier);
+                    break;
+                case "internalNodes":
+                    final String[] split1 = tagText.split(" ");
+                    currClassifier.leftNode = Integer.parseInt(split1[0]);
+                    currClassifier.rightNode = Integer.parseInt(split1[1]);
+                    currClassifier.featureId = Integer.parseInt(split1[2]);
+                    currClassifier.threshold = Double.parseDouble(split1[3]);
+                    break;
+                case "leafValues":
+                    final String[] split2 = tagText.split(" ");
+                    currClassifier.leafValues =
+                            Stream.of(split2).mapToDouble(Double::parseDouble).toArray();
+                    break;
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * Parse the <features> section.
      * @param reader
      * @throws XMLStreamException
      */
-    private void parseFeature(XMLStreamReader reader, TreeNode currNode) throws XMLStreamException {
+    private void parseFeatures(XMLStreamReader reader) throws XMLStreamException {
         HaarRectangle[] rects = null;
         String tagText = null;
         while (reader.hasNext()) {
@@ -269,6 +283,8 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
             switch(event) {
             case XMLStreamConstants.START_ELEMENT:
                 switch (reader.getLocalName()) {
+                case "_":
+                    break;
                 case "rects":
                     rects = parseRects(reader);
                     break;
@@ -281,9 +297,11 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
 
             case XMLStreamConstants.END_ELEMENT:
                 switch (reader.getLocalName()) {
-                case "feature":
-                    currNode.feature = new HaarLikeFeature(rects, width, height);
+                case "features":
                     return; // Get back.
+                case "_":
+                    features.add(new HaarLikeFeature(rects, this.width, this.height));
+                    break;
                 }
                 break;
             }
@@ -326,6 +344,5 @@ public class OpenCV2DetectionCascade implements DetectionCascade {
         // We should never get here, actually.
         throw new RuntimeException("Error in rect parsing!");
     }
-
 
 }

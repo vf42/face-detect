@@ -11,9 +11,8 @@ import lv.rtu.dadi.facedetect.ImageUtils;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
-import lv.rtu.dadi.facedetect.detectors.FaceMerger;
-import lv.rtu.dadi.facedetect.detectors.violajones.OpenCV3DetectionCascade;
-import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesFaceDetector;
+import lv.rtu.dadi.facedetect.detectors.violajones.SimpleVJFaceDetector;
+import lv.rtu.dadi.facedetect.detectors.violajones.cascades.OpenCV3DetectionCascade;
 
 import org.apache.commons.imaging.ImageReadException;
 
@@ -27,6 +26,7 @@ public class ViolaJonesDemo_OCV3Cascade {
 //            "C:\\Soft\\opencv30rc1\\build\\etc\\haarcascades\\haarcascade_frontalface_alt_tree.xml";
 
     private final static String sceneFile =
+//            "data\\MIT-CMU\\test-low\\trekcolr.gif";
             "data\\MIT-CMU\\test-low\\trek-trio.gif";
 //            "data\\strongrace\\1.JPG";
 //            "data\\MIT-CMU\\test\\original2.gif";
@@ -40,25 +40,26 @@ public class ViolaJonesDemo_OCV3Cascade {
     }
 
     public static void main(String[] args) throws ImageReadException, IOException, XMLStreamException {
-        final long startTime = System.nanoTime();
-
         // Using the OpenCV3 cascade.
-        final FaceDetector detector = new ViolaJonesFaceDetector(
+        final FaceDetector detector = new SimpleVJFaceDetector(
                 new OpenCV3DetectionCascade(
                         new FileInputStream(cascadeFile)));
 
         final GrayscaleImage scene =
                 new GrayscaleImage(ImageUtils.readImage(sceneFile));
 
-        final List<FaceLocation> faces = detector.detectFaces(scene);
-//        new ImagePreviewWindow("V-J Result", scene, faces);
+//        final ImageScanVisualizer visual = new ImageScanVisualizer("Process", scene, sceneFile, true);
+//        detector.setVisual(visual);
 
-        final List<FaceLocation> mergedFaces2 = FaceMerger.faceCenterMerge(faces);
-        new ImagePreviewWindow("Merged Result", scene, mergedFaces2);
+        final long startTime = System.nanoTime();
+
+        final List<FaceLocation> faces = detector.detectFaces(scene);
 
         final double totalTime = (System.nanoTime() - startTime) / 1000000000.0;
-
         System.out.println(String.format("Processing time: %.3fs", totalTime));
+
+        new ImagePreviewWindow("Result", scene, faces);
+//        new ImagePreviewWindow("V-J Result", scene, faces);
     }
 
 }
