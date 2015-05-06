@@ -1,6 +1,7 @@
 package lv.rtu.dadi.facedetect.haar;
 
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
+import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -93,4 +93,18 @@ public class GrayscaleImage implements Image {
         }
         return max;
     }
+
+    /**
+     * Returns the minimum of all pixel values.
+     * @return
+     */
+    public double getMin() {
+        double min = pixels[0][0];
+        for (int i = 0; i < pixels.length; i++) {
+            for (int j = 0; j < pixels[0].length ; j++) {
+                min = min > pixels[i][j] ? pixels[i][j] : min;
+            }
+        }
+        return min;
+    }
 }

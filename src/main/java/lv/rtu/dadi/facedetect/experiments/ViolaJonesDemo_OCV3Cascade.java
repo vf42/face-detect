@@ -27,13 +27,13 @@ public class ViolaJonesDemo_OCV3Cascade {
 //            "C:\\Soft\\opencv30rc1\\build\\etc\\haarcascades\\haarcascade_frontalface_alt_tree.xml";
 
     private final static String sceneFile =
-//            "data\\MIT-CMU\\test-low\\trek-trio.gif";
+            "data\\MIT-CMU\\test-low\\trek-trio.gif";
 //            "data\\strongrace\\1.JPG";
 //            "data\\MIT-CMU\\test\\original2.gif";
 //            "data\\MIT-CMU\\newtest\\newsradio.gif";
 //            "data\\MIT-CMU\\newtest\\addams-family.gif";
 //            "data\\MIT-CMU\\newtest\\class57.gif";
-            "data\\MIT-CMU\\newtest\\er.gif";
+//            "data\\MIT-CMU\\newtest\\er.gif";
 
     public ViolaJonesDemo_OCV3Cascade() {
         // TODO Auto-generated constructor stub

@@ -1,5 +1,7 @@
 package lv.rtu.dadi.facedetect.haar;
 
+import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
+
 
 
 /**

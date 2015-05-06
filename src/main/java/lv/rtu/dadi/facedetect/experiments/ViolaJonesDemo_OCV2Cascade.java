@@ -23,9 +23,9 @@ public class ViolaJonesDemo_OCV2Cascade {
 
   private final static String sceneFile =
 //          "data\\primitives\\white_point.png";
-//          "data\\MIT-CMU\\test-low\\trek-trio.gif";
+          "data\\MIT-CMU\\test-low\\trek-trio.gif";
 //          "data\\strongrace\\1.JPG";
-          "data\\MIT-CMU\\test\\original2.gif";
+//          "data\\MIT-CMU\\test\\original2.gif";
 //          "data\\MIT-CMU\\newtest\\newsradio.gif";
 
   public static void main(String[] args) throws ImageReadException, IOException, XMLStreamException {

@@ -1,6 +1,8 @@
 package lv.rtu.dadi.facedetect.filters;
 
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
@@ -315,6 +317,57 @@ public final class GrayscaleFilterFactory {
                     }
                 }
                 return result;
+            }
+        };
+    }
+
+    /**
+     * Returns grayscale gamma correction filter.
+     * @param alpha
+     * @param gamma
+     * @return
+     */
+    public static GrayscaleFilter getGammaCorrection(double alpha, double gamma) {
+        return new GrayscaleFilter() {
+            @Override
+            public GrayscaleImage apply(GrayscaleImage source) {
+                final double[][] pixels = Stream.of(source.pixels).map(
+                        column -> DoubleStream.of(column).map(x -> alpha * Math.pow(x, gamma)).toArray())
+                        .toArray(len -> new double[len][]);
+                return new GrayscaleImage(pixels);
+            }
+        };
+    }
+
+    public static GrayscaleFilter getLinearContrast() {
+        return new GrayscaleFilter() {
+            @Override
+            public GrayscaleImage apply(GrayscaleImage source) {
+                final double xmin = source.getMin();
+                final double xmax = source.getMax();
+                final double xdiff = xmax - xmin;
+                final double[][] pixels = Stream.of(source.pixels).map(
+                        column -> DoubleStream.of(column)
+                        .map(x -> (x - xmin) / xdiff).toArray())
+                        .toArray(len -> new double[len][]);
+                return new GrayscaleImage(pixels);
+            }
+        };
+    }
+
+    public static GrayscaleFilter getLinearContrast(double ymin, double ymax) {
+        return new GrayscaleFilter() {
+            @Override
+            public GrayscaleImage apply(GrayscaleImage source) {
+                final double xmin = source.getMin();
+                final double xmax = source.getMax();
+                final double xdiff = xmax - xmin;
+                final double ydiff = ymax - ymin;
+                final double[][] pixels = Stream.of(source.pixels).map(
+                        column -> DoubleStream.of(column)
+                        .map(x -> ((x - xmin) / xdiff) * ydiff + ymin).toArray())
+                        .toArray(len -> new double[len][]);
+                return new GrayscaleImage(pixels);
             }
         };
     }

@@ -3,10 +3,10 @@ package lv.rtu.dadi.facedetect.detectors.violajones;
 import java.util.LinkedList;
 import java.util.List;
 
+import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
 import lv.rtu.dadi.facedetect.haar.FourRectHLF;
 import lv.rtu.dadi.facedetect.haar.HaarLikeFeature;
-import lv.rtu.dadi.facedetect.haar.IntegralImage;
 import lv.rtu.dadi.facedetect.haar.ThreeRectHorizontalHLF;
 import lv.rtu.dadi.facedetect.haar.TwoRectHorizontalHLF;
 import lv.rtu.dadi.facedetect.haar.TwoRectVerticalHLF;

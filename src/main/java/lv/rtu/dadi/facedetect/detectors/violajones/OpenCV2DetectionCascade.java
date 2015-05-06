@@ -10,10 +10,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
 import lv.rtu.dadi.facedetect.haar.HaarLikeFeature;
 import lv.rtu.dadi.facedetect.haar.HaarRectangle;
-import lv.rtu.dadi.facedetect.haar.IntegralImage;
 
 /**
  * The HAAR cascade using classifier cascade XML file format found in JViolaJones distribution.

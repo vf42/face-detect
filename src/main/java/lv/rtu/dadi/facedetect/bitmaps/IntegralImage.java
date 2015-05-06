@@ -1,27 +1,28 @@
-package lv.rtu.dadi.facedetect.haar;
+package lv.rtu.dadi.facedetect.bitmaps;
 
 import java.awt.image.BufferedImage;
 
-import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
-import lv.rtu.dadi.facedetect.bitmaps.Image;
+import lv.rtu.dadi.facedetect.haar.HaarRectangle;
 
 /**
  * Integral image implementation for Haar-like feature computation.
+ * Pixel values are converted to int 0..255 representation.
+ *
  * @author fedorovvadim
  *
  */
 public class IntegralImage implements Image {
 
-    public final double[][] values;     // Simple II.
-    public final double[][] sqValues;   // Square II.
+    public final long[][] values;     // Simple II.
+    public final long[][] sqValues;   // Square II.
 
     public IntegralImage(GrayscaleImage source) {
-        values = new double[source.getWidth()][source.getHeight()];
-        sqValues = new double[source.getWidth()][source.getHeight()];
+        values = new long[source.getWidth()][source.getHeight()];
+        sqValues = new long[source.getWidth()][source.getHeight()];
         for (int xi = 0; xi < source.getWidth(); xi++) {
             for (int yi = 0; yi < source.getHeight(); yi++) {
-                double sum = source.pixels[xi][yi] * 255;
-                double sqSum = source.pixels[xi][yi] * source.pixels[xi][yi] * 255 * 255;
+                long sum = (long) (source.pixels[xi][yi] * 255);
+                long sqSum = (long) (source.pixels[xi][yi] * source.pixels[xi][yi] * 255 * 255);
                 if (xi > 0) {
                     sum += values[xi - 1][yi];
                     sqSum += sqValues[xi - 1][yi];
@@ -48,11 +49,11 @@ public class IntegralImage implements Image {
      * @param h
      * @return
      */
-    public double getRectValue(int x, int y, int w, int h) {
+    public long getRectValue(int x, int y, int w, int h) {
         return values[x + w][y + h] + values[x][y] - values[x + w][y] - values[x][y + h];
     }
 
-    public double getRectValue(int baseX, int baseY, HaarRectangle rect) {
+    public long getRectValue(int baseX, int baseY, HaarRectangle rect) {
         try {
             return values[baseX + rect.x1][baseY + rect.y1] + values[baseX + rect.x0][baseY + rect.y0]
                     - values[baseX + rect.x1][baseY + rect.y0] - values[baseX + rect.x0][baseY + rect.y1];
@@ -62,7 +63,7 @@ public class IntegralImage implements Image {
         }
     }
 
-    public double getSqRectValue(int baseX, int baseY, HaarRectangle rect) {
+    public long getSqRectValue(int baseX, int baseY, HaarRectangle rect) {
         try {
             return sqValues[baseX + rect.x1][baseY + rect.y1] + sqValues[baseX + rect.x0][baseY + rect.y0]
                     - sqValues[baseX + rect.x1][baseY + rect.y0] - sqValues[baseX + rect.x0][baseY + rect.y1];

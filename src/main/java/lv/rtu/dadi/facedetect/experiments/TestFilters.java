@@ -35,6 +35,9 @@ public class TestFilters {
         final GrayscaleFilter sobel = GrayscaleFilterFactory.getSobelEdgeDetector();
         new ImagePreviewWindow("Sobel from Filtered", sobel.apply(filt1));
         new ImagePreviewWindow("Sobel from Orig", sobel.apply(orig));
+
+        final GrayscaleFilter gamma = GrayscaleFilterFactory.getGammaCorrection(1.0, 0.4);
+        new ImagePreviewWindow("Gamma", gamma.apply(orig));
       }
 
 }
