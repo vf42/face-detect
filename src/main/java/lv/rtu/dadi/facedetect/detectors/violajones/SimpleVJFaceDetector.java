@@ -1,6 +1,5 @@
 package lv.rtu.dadi.facedetect.detectors.violajones;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import lv.rtu.dadi.facedetect.ImageScanVisualizer;
@@ -13,7 +12,7 @@ import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 import lv.rtu.dadi.facedetect.detectors.FaceMerger;
 import lv.rtu.dadi.facedetect.detectors.violajones.cascades.DetectionCascade;
 import lv.rtu.dadi.facedetect.detectors.violajones.cascades.StupidDetectionCascade;
-import lv.rtu.dadi.facedetect.detectors.violajones.scanners.LinearExhaustiveSubWindowScanner;
+import lv.rtu.dadi.facedetect.detectors.violajones.scanners.LinearExhaustiveScanner;
 import lv.rtu.dadi.facedetect.detectors.violajones.scanners.SubWindowScanner;
 
 /**
@@ -42,40 +41,39 @@ public class SimpleVJFaceDetector implements FaceDetector {
      * @param scene
      * @return
      */
-    private SubWindowScanner getScanner(GrayscaleImage scene) {
-        return new LinearExhaustiveSubWindowScanner(this, scene);
+    protected SubWindowScanner getScanner(ViolaJonesContext context) {
+        return new LinearExhaustiveScanner(this, context);
     }
 
     @Override
     public List<FaceLocation> detectFaces(GrayscaleImage scene) {
-        final ViolaJonesStats stats = new ViolaJonesStats(cascade.getFeatureCount());
-        final List<FaceLocation> rawResult = new LinkedList<>();
         final IntegralImage integralImg = new IntegralImage(scene);
-        final SubWindowScanner scanner = getScanner(scene);
+        final ViolaJonesContext context = new ViolaJonesContext(scene, integralImg, cascade.getFeatureCount());
+        final SubWindowScanner scanner = getScanner(context);
         int prevWinSize = -1;
         while (scanner.hasNext()) {
             final SubWindow sw = scanner.next();
             if (sw.w != prevWinSize) {
-                stats.addWindowSize(sw.w);
+                context.stats.addWindowSize(sw.w);
                 prevWinSize = sw.w;
             }
-            stats.addWindow();
+            context.stats.addWindow();
             if (visual != null) {
                 visual.setWindow(sw);
             }
-            if (cascade.testWindow(integralImg, sw, stats)) {
+            if (cascade.testWindow(integralImg, sw, context.stats)) {
                 final FaceLocation fl = new FaceLocation(sw);
-                rawResult.add(fl);
-                stats.addFace();
+                context.rawResult.add(fl);
+                context.stats.addFace();
                 if (visual != null) {
                     visual.addFace(fl);
                 }
             }
         }
-        final List<FaceLocation> mergedResult = FaceMerger.faceCenterMerge(rawResult);
-        stats.setMergedFaces(mergedResult.size());
+        final List<FaceLocation> mergedResult = FaceMerger.faceCenterMerge(context.rawResult);
+        context.stats.setMergedFaces(mergedResult.size());
         if (Settings.DEBUG) {
-            stats.printStats();
+            context.stats.printStats();
         }
         return mergedResult;
     }

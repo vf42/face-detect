@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import lv.rtu.dadi.facedetect.ImagePreviewWindow;
+import lv.rtu.dadi.facedetect.ImageScanVisualizer;
 import lv.rtu.dadi.facedetect.ImageUtils;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
@@ -19,16 +20,13 @@ import org.apache.commons.imaging.ImageReadException;
 public class ViolaJonesDemo_OCV3Cascade {
 
     private final static String cascadeFile =
-//            "data\\cascades\\my_stupid_cascade.xml";
-//            "C:\\Soft\\opencv30rc1\\build\\etc\\haarcascades\\haarcascade_frontalface_default.xml";
-            "C:\\Soft\\opencv30rc1\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml";
-//            "C:\\Soft\\opencv30rc1\\build\\etc\\haarcascades\\haarcascade_eye.xml";
-//            "C:\\Soft\\opencv30rc1\\build\\etc\\haarcascades\\haarcascade_frontalface_alt_tree.xml";
+            "data\\cascades\\haarcascade_frontalface_alt.xml";
 
     private final static String sceneFile =
+//            "data\\MIT-CMU\\test-low\\Brazil.gif";
 //            "data\\MIT-CMU\\test-low\\trekcolr.gif";
-            "data\\MIT-CMU\\test-low\\trek-trio.gif";
-//            "data\\strongrace\\1.JPG";
+//            "data\\MIT-CMU\\test-low\\trek-trio.gif";
+            "data\\strongrace\\1.JPG";
 //            "data\\MIT-CMU\\test\\original2.gif";
 //            "data\\MIT-CMU\\newtest\\newsradio.gif";
 //            "data\\MIT-CMU\\newtest\\addams-family.gif";
@@ -48,8 +46,8 @@ public class ViolaJonesDemo_OCV3Cascade {
         final GrayscaleImage scene =
                 new GrayscaleImage(ImageUtils.readImage(sceneFile));
 
-//        final ImageScanVisualizer visual = new ImageScanVisualizer("Process", scene, sceneFile, true);
-//        detector.setVisual(visual);
+        final ImageScanVisualizer visual = new ImageScanVisualizer("Process", scene, sceneFile, true);
+        detector.setVisual(visual);
 
         final long startTime = System.nanoTime();
 

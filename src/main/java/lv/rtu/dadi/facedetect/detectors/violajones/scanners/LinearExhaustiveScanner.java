@@ -4,25 +4,23 @@ import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
 import lv.rtu.dadi.facedetect.detectors.violajones.SimpleVJFaceDetector;
+import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesContext;
 
 /**
  * Separate class that provides subwindow scanning strategy.
  * @author fedorovvadim
  *
  */
-public class LinearExhaustiveSubWindowScanner implements SubWindowScanner {
+public class LinearExhaustiveScanner implements SubWindowScanner {
 
-    /**
-     *
-     */
-    private final SimpleVJFaceDetector violaJonesFaceDetector;
+    private final SimpleVJFaceDetector detector;
 
     final GrayscaleImage scene;
 
     final int maxWindowSize;
     final int minWindowSize;
 
-    double sizeStep = 1.0;    // Defines how fast the window will grow.
+    double sizeStep = 2;    // Defines how fast the window will grow.
     int windowSize;
 
     int shiftStep;          // Defines how fast the window will be moved over the scene.
@@ -30,11 +28,11 @@ public class LinearExhaustiveSubWindowScanner implements SubWindowScanner {
     private SubWindow currWindow = null;
     private SubWindow nextWindow = null;
 
-    public LinearExhaustiveSubWindowScanner(SimpleVJFaceDetector violaJonesFaceDetector, GrayscaleImage scene) {
-        this.violaJonesFaceDetector = violaJonesFaceDetector;
-        this.scene = scene;
+    public LinearExhaustiveScanner(SimpleVJFaceDetector violaJonesFaceDetector, ViolaJonesContext context) {
+        this.detector = violaJonesFaceDetector;
+        this.scene = context.scene;
         this.maxWindowSize = scene.getWidth() < scene.getHeight() ? scene.getWidth() : scene.getHeight();
-        this.minWindowSize = this.violaJonesFaceDetector.getCascade().getWidth() * 2;
+        this.minWindowSize = this.detector.getCascade().getWidth();
         this.sizeStep = 2;
         this.shiftStep = 2;
 
@@ -69,11 +67,11 @@ public class LinearExhaustiveSubWindowScanner implements SubWindowScanner {
                 // Reached max x.
                 nextWindow.x = 0;
                 // Update size step if needed.
-                if (windowSize <= 32) {
-                    sizeStep += 0.5;
-                } else {
-                    sizeStep += 1;
-                }
+//                if (windowSize <= 32) {
+//                    sizeStep += 0.5;
+//                } else {
+//                    sizeStep += 1;
+//                }
                 windowSize += sizeStep;
                 if (windowSize > maxWindowSize) {
                     // Reached max size, no next.
