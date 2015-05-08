@@ -12,6 +12,7 @@ import lv.rtu.dadi.facedetect.ImageUtils;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
+import lv.rtu.dadi.facedetect.detectors.mergers.FaceCenterMerger;
 import lv.rtu.dadi.facedetect.detectors.violajones.SimpleVJFaceDetector;
 import lv.rtu.dadi.facedetect.detectors.violajones.cascades.OpenCV3DetectionCascade;
 
@@ -26,7 +27,8 @@ public class ViolaJonesDemo_OCV3Cascade {
 //            "data\\MIT-CMU\\test-low\\Brazil.gif";
 //            "data\\MIT-CMU\\test-low\\trekcolr.gif";
 //            "data\\MIT-CMU\\test-low\\trek-trio.gif";
-            "data\\strongrace\\1.JPG";
+//            "data\\strongrace\\1.JPG";
+            "data\\miscpics\\1.jpg";
 //            "data\\MIT-CMU\\test\\original2.gif";
 //            "data\\MIT-CMU\\newtest\\newsradio.gif";
 //            "data\\MIT-CMU\\newtest\\addams-family.gif";
@@ -41,12 +43,13 @@ public class ViolaJonesDemo_OCV3Cascade {
         // Using the OpenCV3 cascade.
         final FaceDetector detector = new SimpleVJFaceDetector(
                 new OpenCV3DetectionCascade(
-                        new FileInputStream(cascadeFile)));
+                        new FileInputStream(cascadeFile)),
+                new FaceCenterMerger(3));
 
         final GrayscaleImage scene =
                 new GrayscaleImage(ImageUtils.readImage(sceneFile));
 
-        final ImageScanVisualizer visual = new ImageScanVisualizer("Process", scene, sceneFile, true);
+        final ImageScanVisualizer visual = new ImageScanVisualizer("Process", scene, sceneFile, false);
         detector.setVisual(visual);
 
         final long startTime = System.nanoTime();

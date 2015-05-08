@@ -20,6 +20,7 @@ public class LinearExhaustiveScanner implements SubWindowScanner {
     final int maxWindowSize;
     final int minWindowSize;
 
+    final boolean factorScaling;
     double sizeStep = 2;    // Defines how fast the window will grow.
     int windowSize;
 
@@ -28,12 +29,18 @@ public class LinearExhaustiveScanner implements SubWindowScanner {
     private SubWindow currWindow = null;
     private SubWindow nextWindow = null;
 
-    public LinearExhaustiveScanner(SimpleVJFaceDetector violaJonesFaceDetector, ViolaJonesContext context) {
+    public LinearExhaustiveScanner(SimpleVJFaceDetector violaJonesFaceDetector,
+            ViolaJonesContext context, boolean factorScaling) {
         this.detector = violaJonesFaceDetector;
         this.scene = context.scene;
         this.maxWindowSize = scene.getWidth() < scene.getHeight() ? scene.getWidth() : scene.getHeight();
-        this.minWindowSize = this.detector.getCascade().getWidth();
-        this.sizeStep = 2;
+        this.minWindowSize = scene.getWidth() / 20; //this.detector.getCascade().getWidth();
+        this.factorScaling = factorScaling;
+        if (factorScaling) {
+            this.sizeStep = 1.1;
+        } else {
+            this.sizeStep = 4;
+        }
         this.shiftStep = 2;
 
         if (Settings.DEBUG) {
@@ -67,12 +74,16 @@ public class LinearExhaustiveScanner implements SubWindowScanner {
                 // Reached max x.
                 nextWindow.x = 0;
                 // Update size step if needed.
-//                if (windowSize <= 32) {
-//                    sizeStep += 0.5;
-//                } else {
-//                    sizeStep += 1;
-//                }
-                windowSize += sizeStep;
+                if (factorScaling) {
+                    windowSize = (int) Math.ceil(windowSize * sizeStep);
+                } else {
+                    if (windowSize <= 32) {
+                        sizeStep += 0.5;
+                    } else {
+                        sizeStep += 1;
+                    }
+                    windowSize += sizeStep;
+                }
                 if (windowSize > maxWindowSize) {
                     // Reached max size, no next.
                     nextWindow = null;

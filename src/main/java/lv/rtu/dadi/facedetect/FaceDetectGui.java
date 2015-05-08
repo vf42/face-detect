@@ -1,36 +1,67 @@
 package lv.rtu.dadi.facedetect;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
-import javax.swing.ButtonGroup;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
+import javax.swing.JProgressBar;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.XMLStreamException;
+
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
+import lv.rtu.dadi.facedetect.detectors.FaceDetector;
+import lv.rtu.dadi.facedetect.detectors.FaceLocation;
+import lv.rtu.dadi.facedetect.detectors.violajones.OptimalVJFaceDetector;
+
+import org.apache.commons.imaging.ImageReadException;
 
 /**
  * GUI app for face detection experiments.
  *
  */
-public class FaceDetectGui extends JFrame {
+public class FaceDetectGui extends JFrame implements ItemListener {
     private static final long serialVersionUID = 1L;
 
-    private final ButtonGroup buttonGroup = new ButtonGroup();
-    private Canvas canvas;
+    private JCheckBox jcbPreviewProcessed;
+    private JCheckBox jcbAnimate;
+    private JCheckBox jcbAnimateFeatures;
+    private JCheckBox jcbShowFinalResult;
+    private JButton btnOpenAndDetect;
+    private JProgressBar progressBar;
 
-    public FaceDetectGui() {
+    private final FaceDetector detector;
+    private final ReentrantLock detectorLock;
+
+    private String lastDir = null;
+
+    private final ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
+
+    public FaceDetectGui() throws FileNotFoundException, XMLStreamException {
         initUI();
+        detector = new OptimalVJFaceDetector();
+        detectorLock = new ReentrantLock();
     }
 
     /**
@@ -38,38 +69,56 @@ public class FaceDetectGui extends JFrame {
      */
     private void initUI() {
         initMenu();
-
-        setSize(800, 600);
+        setTitle("Face Detect");
+        setSize(250, 200);
         setVisible(true);
+        setResizable(false);
         setLocationRelativeTo(null);
+        setLocationByPlatform(false);
+        setLocation(0, 0);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        getContentPane().setLayout(new BorderLayout(0, 0));
-
-        final JToolBar toolBar = new JToolBar();
-        toolBar.setFloatable(false);
-        getContentPane().add(toolBar, BorderLayout.NORTH);
-
-        final JButton btnRun = new JButton("Run");
-        btnRun.addActionListener(e -> doRun());
-        btnRun.setFont(new Font("Tahoma", Font.BOLD, 11));
-        toolBar.add(btnRun);
-
-        final JSplitPane splitPane = new JSplitPane();
-        getContentPane().add(splitPane, BorderLayout.CENTER);
-
-        final JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setMinimumSize(new Dimension(150, 100));
-        splitPane.setLeftComponent(scrollPane);
+        getContentPane().setLayout(new BorderLayout(4, 4));
 
         final JPanel panel = new JPanel();
-        splitPane.setRightComponent(panel);
+        final BoxLayout panelLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.add(Box.createVerticalGlue());
+        panel.setLayout(panelLayout);
+        getContentPane().add(panel, BorderLayout.NORTH);
 
-                        canvas = new Canvas();
-                        panel.add(canvas);
-                        panel.setMinimumSize(new Dimension(300, 300));
-                        canvas.setBackground(new Color(102, 204, 255));
-                        canvas.setMinimumSize(new Dimension(300, 300));
-        panel.getGraphics().drawOval(50, 50, 20, 20);
+        btnOpenAndDetect = new JButton("Open & Detect");
+        btnOpenAndDetect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    openAndDetect();
+                } catch (ImageReadException | IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        panel.add(btnOpenAndDetect);
+
+        jcbShowFinalResult = new JCheckBox("Show final result");
+        jcbShowFinalResult.setSelected(true);
+        jcbShowFinalResult.setEnabled(false);
+        jcbPreviewProcessed = new JCheckBox("Preview processed");
+        jcbAnimate = new JCheckBox("Animate sub-window scan");
+        jcbAnimateFeatures = new JCheckBox("Animate Haar-like features");
+        jcbAnimateFeatures.setEnabled(false);
+
+        jcbPreviewProcessed.addItemListener(this);
+        jcbAnimate.addItemListener(this);
+        jcbAnimateFeatures.addItemListener(this);
+        jcbPreviewProcessed.addItemListener(this);
+
+        panel.add(jcbPreviewProcessed);
+        panel.add(jcbAnimate);
+        panel.add(jcbAnimateFeatures);
+        panel.add(jcbShowFinalResult);
+
+        progressBar = new JProgressBar();
+        getContentPane().add(progressBar, BorderLayout.SOUTH);
     }
 
     private void initMenu() {
@@ -81,6 +130,16 @@ public class FaceDetectGui extends JFrame {
 
         final JMenuItem open = new JMenuItem("Open...");
         open.setMnemonic(KeyEvent.VK_O);
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    openAndDetect();
+                } catch (ImageReadException | IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         file.add(open);
         file.addSeparator();
 
@@ -89,27 +148,112 @@ public class FaceDetectGui extends JFrame {
         exit.addActionListener(event -> System.exit(0));
         file.add(exit);
 
-        final JMenu algorithm = new JMenu("Algorithm");
-        file.setMnemonic(KeyEvent.VK_A);
-        menubar.add(algorithm);
-
-        final JRadioButtonMenuItem rdbtnmntmDummy = new JRadioButtonMenuItem("Dummy");
-        rdbtnmntmDummy.setSelected(true);
-        buttonGroup.add(rdbtnmntmDummy);
-        algorithm.add(rdbtnmntmDummy);
-
         setJMenuBar(menubar);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, XMLStreamException {
         new FaceDetectGui();
     }
 
-    /**
-     * Run the selected algorithm.
-     */
-    private void doRun() {
-        canvas.setForeground(Color.red);
-        canvas.getGraphics().drawRect(10, 10, 100, 100);
+    public void openAndDetect() throws ImageReadException, IOException {
+        final File f = openFile();
+        if (f == null) {
+            return;
+        }
+
+        final JFrame parentWindow = this;
+        executor.schedule(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    btnOpenAndDetect.setEnabled(false);
+                    detectorLock.lock();
+
+                    final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage(f));
+                    int winLocShift = 0;
+                    if (jcbPreviewProcessed.isSelected()) {
+                        final ImagePreviewWindow ipw =
+                                new ImagePreviewWindow(f.getName() + " processed", detector.getPreprocessed(scene));
+                        ipw.setLocationRelativeTo(parentWindow);
+                        ipw.setLocation(parentWindow.getWidth() + 5, 0);
+                        winLocShift += 35;
+                    }
+                    if (jcbAnimate.isSelected()) {
+                        final ImageScanVisualizer visual = new ImageScanVisualizer(
+                                f.getName() + " scan", scene, f.getAbsolutePath(),
+                                jcbAnimateFeatures.isSelected());
+                        visual.setLocationRelativeTo(parentWindow);
+                        visual.setLocation(parentWindow.getWidth() + 5 + winLocShift, winLocShift);
+                        winLocShift += 35;
+                        detector.setVisual(visual);
+                        // Wait for it to initialize.
+                        try {
+                            Thread.sleep(500);
+                        } catch (final InterruptedException e) {
+                        }
+                    } else {
+                        detector.setVisual(null);
+                    }
+                    progressBar.setIndeterminate(true);
+                    final List<FaceLocation> faces = detector.detectFaces(scene);
+                    if (jcbShowFinalResult.isSelected()) {
+                        final ImagePreviewWindow ipw = new ImagePreviewWindow(f.getName() + " result", scene, faces);
+                        ipw.setLocationRelativeTo(parentWindow);
+                        ipw.setLocation(parentWindow.getWidth() + 5 + winLocShift, winLocShift);
+                    }
+                } catch (final ImageReadException e1) {
+                    e1.printStackTrace();
+                } catch (final IOException e1) {
+                    e1.printStackTrace();
+                } finally {
+                    detectorLock.unlock();
+                    progressBar.setIndeterminate(false);
+                    btnOpenAndDetect.setEnabled(true);
+                }
+            }
+        }, 10, TimeUnit.MILLISECONDS);
     }
+
+    private File openFile() {
+        final JFileChooser fc = new JFileChooser(lastDir != null ? lastDir : System.getProperty("user.dir"));
+        fc.setFileFilter(new FileNameExtensionFilter("Image files", "jpg", "png", "gif", "bmp", "jpeg"));
+        if (JFileChooser.APPROVE_OPTION == fc.showOpenDialog(this)) {
+            final File result = fc.getSelectedFile();
+            lastDir = result.getParent();
+            return result;
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        final Object source = e.getItemSelectable();
+        if (source == jcbShowFinalResult) {
+
+        } else if (source == jcbPreviewProcessed) {
+
+        } else if (source == jcbAnimate) {
+            jcbAnimateFeatures.setEnabled(jcbAnimate.isSelected());
+        } else if (source == jcbAnimateFeatures) {
+
+        }
+
+        // If none is selected - select ShowFinalResult.
+        if (e.getStateChange() == ItemEvent.DESELECTED
+                && !jcbPreviewProcessed.isSelected()
+                && !jcbAnimate.isSelected()) {
+            jcbShowFinalResult.setSelected(true);
+            jcbShowFinalResult.setEnabled(false);
+        }
+        // If anything else is selected - make ShowFinalResult available.
+        if (e.getStateChange() == ItemEvent.SELECTED
+                && (jcbPreviewProcessed.isSelected() || jcbAnimate.isSelected())) {
+            jcbShowFinalResult.setEnabled(true);
+        }
+    }
+
+
 }

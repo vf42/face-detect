@@ -46,9 +46,13 @@ public class ImageUtils {
      * @throws IOException
      */
     public static BufferedImage readImage(String fname) throws ImageReadException, IOException {
+        return readImage(new File(fname));
+    }
+
+    public static BufferedImage readImage(File file) throws ImageReadException, IOException {
         final Map<String, Object> params = new HashMap<String, Object>();
         params.put(ImagingConstants.BUFFERED_IMAGE_FACTORY, new ManagedImageBufferedImageFactory());
-        final BufferedImage image = Imaging.getBufferedImage(new File(fname), params);
+        final BufferedImage image = Imaging.getBufferedImage(file, params);
         return image;
     }
 

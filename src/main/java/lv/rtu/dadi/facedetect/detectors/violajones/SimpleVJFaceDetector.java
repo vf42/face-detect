@@ -9,7 +9,8 @@ import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
-import lv.rtu.dadi.facedetect.detectors.FaceMerger;
+import lv.rtu.dadi.facedetect.detectors.mergers.FaceCenterMerger;
+import lv.rtu.dadi.facedetect.detectors.mergers.FaceMerger;
 import lv.rtu.dadi.facedetect.detectors.violajones.cascades.DetectionCascade;
 import lv.rtu.dadi.facedetect.detectors.violajones.cascades.StupidDetectionCascade;
 import lv.rtu.dadi.facedetect.detectors.violajones.scanners.LinearExhaustiveScanner;
@@ -23,17 +24,21 @@ import lv.rtu.dadi.facedetect.detectors.violajones.scanners.SubWindowScanner;
 public class SimpleVJFaceDetector implements FaceDetector {
 
     private final DetectionCascade cascade;
-
+    private final FaceMerger merger;
 
     private ImageScanVisualizer visual;
 
     public SimpleVJFaceDetector() {
-        // Init detection cascade.
-        this.cascade = new StupidDetectionCascade();
+        this(new StupidDetectionCascade(), new FaceCenterMerger());
     }
 
     public SimpleVJFaceDetector(DetectionCascade cascade) {
+        this(cascade, new FaceCenterMerger());
+    }
+
+    public SimpleVJFaceDetector(DetectionCascade cascade, FaceMerger merger) {
         this.cascade = cascade;
+        this.merger = merger;
     }
 
     /**
@@ -42,7 +47,7 @@ public class SimpleVJFaceDetector implements FaceDetector {
      * @return
      */
     protected SubWindowScanner getScanner(ViolaJonesContext context) {
-        return new LinearExhaustiveScanner(this, context);
+        return new LinearExhaustiveScanner(this, context, false);
     }
 
     @Override
@@ -70,7 +75,7 @@ public class SimpleVJFaceDetector implements FaceDetector {
                 }
             }
         }
-        final List<FaceLocation> mergedResult = FaceMerger.faceCenterMerge(context.rawResult);
+        final List<FaceLocation> mergedResult = merger.mergeFaces(context.rawResult);
         context.stats.setMergedFaces(mergedResult.size());
         if (Settings.DEBUG) {
             context.stats.printStats();

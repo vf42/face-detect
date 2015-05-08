@@ -16,4 +16,8 @@ public interface FaceDetector {
     default void setVisual(ImageScanVisualizer visual) {
 
     }
+
+    default GrayscaleImage getPreprocessed(GrayscaleImage scene) {
+        return scene;
+    }
 }

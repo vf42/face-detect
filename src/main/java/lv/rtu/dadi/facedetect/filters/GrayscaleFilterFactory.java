@@ -49,6 +49,21 @@ public final class GrayscaleFilterFactory {
          {-2,  5, -2},
          { 0, -2,  0}};
 
+    public static final short[][] HIFREQ_3X3_4 =
+        {{ 0, -1,  0},
+         {-1,  7, -1},
+         { 0, -1,  0}};
+
+    public static final short[][] HIFREQ_3X3_5 =
+       {{ 0, -1,  0},
+        {-1,  4, -1},
+        { 0, -1,  0}};
+
+    public static final short[][] HIFREQ_3X3_6 =
+        {{ 1,  1,  1},
+         { 1, -8,  1},
+         { 1,  1,  1}};
+
     /*
      * Prewitt and Sobel filters for edge detection.
      */

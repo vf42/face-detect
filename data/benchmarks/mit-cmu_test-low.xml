@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<!-- Simplest benchmark consisting of two files. -->
+<benchmark>
+	<file>
+		<path>../MIT-CMU/test-low/albert.gif</path>
+		<face>82 36</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/Arsenal.gif</path>
+		<face>66 111</face>
+		<face>49 88</face>
+		<face>83 63</face>
+		<face>142 53</face>
+		<face>200 71</face>
+		<face>244 95</face>
+		<face>288 80</face>
+		<face>327 50</face>
+		<face>381 47</face>
+		<face>450 31</face>
+		<face>518 76</face>
+		<face>574 59</face>
+		<face>627 46</face>
+		<face>183 196</face>
+		<face>258 188</face>
+		<face>371 165</face>
+		<face>470 177</face>
+		<face>548 195</face>
+		<face>617 200</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/board.gif</path>
+		<face>207 180</face>
+		<face>234 277</face>
+		<face>249 344</face>
+		<face>324 208</face>
+		<face>319 277</face>
+		<face>328 340</face>
+		<face>394 209</face>
+		<face>392 284</face>
+		<face>394 336</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/Brazil.gif</path>
+		<face>35 77</face>
+		<face>123 78</face>
+		<face>221 56</face>
+		<face>338 54</face>
+		<face>458 63</face>
+		<face>546 76</face>
+		<face>100 181</face>
+		<face>218 202</face>
+		<face>349 192</face>
+		<face>478 206</face>
+		<face>604 207</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/brian.gif</path>
+		<face>65 47</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/cards-perp-sml.gif</path>
+		<face>83 42</face>
+		<face>156 37</face>
+		<face>243 35</face>
+		<face>112 95</face>
+		<face>216 98</face>
+		<face>80 165</face>
+		<face>169 161</face>
+		<face>243 163</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/Colombia.gif</path>
+		<face>55 89</face>
+		<face>165 76</face>
+		<face>276 62</face>
+		<face>396 69</face>
+		<face>512 83</face>
+		<face>597 82</face>
+		<face>5 242</face>
+		<face>126 235</face>
+		<face>240 224</face>
+		<face>347 186</face>
+		<face>462 234</face>
+		<face>565 228</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/Ecuador.gif</path>
+		<face>90 91</face>
+		<face>188 93</face>
+		<face>290 87</face>
+		<face>385 91</face>
+		<face>467 93</face>
+		<face>549 98</face>
+		<face>16 195</face>
+		<face>120 220</face>
+		<face>223 236</face>
+		<face>341 224</face>
+		<face>470 220</face>
+		<face>591 245</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/England.gif</path>
+		<face>32 69</face>
+		<face>122 90</face>
+		<face>220 83</face>
+		<face>325 68</face>
+		<face>436 56</face>
+		<face>552 85</face>
+		<face>40 241</face>
+		<face>162 255</face>
+		<face>271 256</face>
+		<face>421 261</face>
+		<face>554 261</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/frisbee.gif</path>
+		<face>67 84</face>
+		<face>155 49</face>
+		<face>115 109</face>
+		<face>199 109</face>
+		<face>236 110</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/Germany.gif</path>
+		<face>37 76</face>
+		<face>137 94</face>
+		<face>249 65</face>
+		<face>374 78</face>
+		<face>474 87</face>
+		<face>587 97</face>
+		<face>43 249</face>
+		<face>167 246</face>
+		<face>316 245</face>
+		<face>461 259</face>
+		<face>602 253</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/kymberly.gif</path>
+		<face>61 53</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/me.gif</path>
+		<face>152 47</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/oksana1.gif</path>
+		<face>118 81</face>
+		<face>142 78</face>
+		<face>171 88</face>
+		<face>215 74</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/soccer.gif</path>
+		<face>28 78</face>
+		<face>71 75</face>
+		<face>127 78</face>
+		<face>192 82</face>
+		<face>271 65</face>
+		<face>351 83</face>
+		<face>431 72</face>
+		<face>517 84</face>
+		<face>606 72</face>
+		<face>121 222</face>
+		<face>194 236</face>
+		<face>272 225</face>
+		<face>371 253</face>
+		<face>460 247</face>
+		<face>541 227</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/tommyrw.gif</path>
+		<face>105 87</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/torrance.gif</path>
+		<face>210 99</face>
+		<face>153 91</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/tp.gif</path>
+		<face>47 72</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/tp-reza-girosi.gif</path>
+		<face>38 61</face>
+		<face>100 71</face>
+		<face>165 45</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/USA.gif</path>
+		<face>64 89</face>
+		<face>175 101</face>
+		<face>280 105</face>
+		<face>388 105</face>
+		<face>480 91</face>
+		<face>564 91</face>
+		<face>46 268</face>
+		<face>153 265</face>
+		<face>272 245</face>
+		<face>409 205</face>
+		<face>520 249</face>
+		<face>79 381</face>
+		<face>138 378</face>
+		<face>212 385</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/Argentina.gif</path>
+		<face>49 72</face>
+		<face>145 64</face>
+		<face>246 64</face>
+		<face>349 50</face>
+		<face>450 72</face>
+		<face>539 62</face>
+		<face>62 221</face>
+		<face>167 216</face>
+		<face>299 230</face>
+		<face>418 217</face>
+		<face>554 218</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/trek-trio.gif</path>
+		<face>33 134</face>
+		<face>130 69</face>
+		<face>235 136</face>
+	</file>
+	<file>
+		<path>../MIT-CMU/test-low/trekcolr.gif</path>
+		<face>53 48</face>
+		<face>98 39</face>
+		<face>140 32</face>
+	</file>
+</benchmark> 

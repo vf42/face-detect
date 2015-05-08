@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- Simplest benchmark consisting of two files. -->
+<benchmark>
+  <file>
+    <path>../MIT-CMU/test-low/trek-trio.gif</path>
+    <face>33 134</face>
+    <face>130 69</face>
+    <face>235 136</face>
+  </file>
+  <file>
+    <path>../MIT-CMU/test-low/trekcolr.gif</path>
+    <face>53 48</face>
+    <face>98 39</face>
+    <face>140 32</face>
+  </file>
+</benchmark> 

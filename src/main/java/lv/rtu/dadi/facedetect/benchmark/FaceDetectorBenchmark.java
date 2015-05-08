@@ -15,6 +15,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import lv.rtu.dadi.facedetect.ImagePreviewWindow;
 import lv.rtu.dadi.facedetect.ImageUtils;
 import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
@@ -36,9 +37,11 @@ public class FaceDetectorBenchmark {
         List<Point> faces = new ArrayList<Point>(); // Storing approximate centers of faces.
     }
 
+    private final boolean showResults;
     private final List<BenchFile> files;
 
-    public FaceDetectorBenchmark(String confFile) {
+    public FaceDetectorBenchmark(String confFile, boolean showResults) {
+        this.showResults = showResults;
         files = new LinkedList<>();
         try {
         parseBenchmarkConfig(confFile);
@@ -47,10 +50,14 @@ public class FaceDetectorBenchmark {
         }
     }
 
+    public FaceDetectorBenchmark(String confFile) {
+        this(confFile, false);
+    }
+
     public BenchmarkResult testDetector(FaceDetector detector) throws ImageReadException, IOException {
         int totalFaces = 0;
         int correctDetections = 0;
-        int wrongDetections = 0;
+        int falseDetections = 0;
         int idx = 0;
         for (final BenchFile bf : files) {
             try {
@@ -73,8 +80,11 @@ public class FaceDetectorBenchmark {
 
                 totalFaces += bf.faces.size();
                 correctDetections += fileCorrect;
-                wrongDetections += fileWrong;
+                falseDetections += fileWrong;
 
+                if (showResults) {
+                    new ImagePreviewWindow(bf.path, scene, detectorResult);
+                }
                 if (Settings.DEBUG) {
                     System.out.println(bf.path);
                     System.out.println(String.format("%d / %d:\t%d %d %d",
@@ -86,8 +96,10 @@ public class FaceDetectorBenchmark {
             }
         }
         final BenchmarkResult result = new BenchmarkResult(totalFaces,
+                correctDetections,
+                falseDetections,
                 correctDetections / (double) totalFaces,
-                wrongDetections / (double) correctDetections);
+                falseDetections / (double) correctDetections);
         if (Settings.DEBUG) {
             result.print();
         }
