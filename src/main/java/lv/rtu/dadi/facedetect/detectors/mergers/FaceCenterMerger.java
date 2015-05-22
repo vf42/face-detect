@@ -52,35 +52,45 @@ public class FaceCenterMerger implements FaceMerger {
           }
           // Merge near-located faces to this one.
           final SubWindow mergedLocation = new SubWindow(currFace.x, currFace.y, currFace.w, currFace.h);
+          final SubWindow narrowestLocation = new SubWindow(currFace.x, currFace.y, currFace.w, currFace.h);
+          final int originalWidth = currFace.w;
           int facesAtLocation = 1;
           while (++currIdx < allFaces.length
                   && centerDistance(currFace, allFaces[currIdx]) < getCenterThreshold(mergedLocation)) {
               ++facesAtLocation;
               final FaceLocation nextFace = allFaces[currIdx];
-              if (!narrowestMatch) {
-                  if (nextFace.x < mergedLocation.x) {
-                      mergedLocation.x = (mergedLocation.x + nextFace.x) / 2;
-                  }
-                  if (nextFace.y < mergedLocation.y) {
-                      mergedLocation.y = (mergedLocation.y + nextFace.y) / 2;
-                  }
-                  final int x1 = nextFace.x + nextFace.w;
-                  final int y1 = nextFace.y + nextFace.h;
-                  if (x1 > mergedLocation.x + mergedLocation.w) {
-                      mergedLocation.w = (mergedLocation.w + x1 - mergedLocation.x) / 2;
-                  }
-                  if (y1 > mergedLocation.y + mergedLocation.h) {
-                      mergedLocation.h = (mergedLocation.h + y1 - mergedLocation.y) / 2;
-                  }
-              } else if (nextFace.w < mergedLocation.w) {
-                  mergedLocation.x = nextFace.x;
-                  mergedLocation.y = nextFace.y;
-                  mergedLocation.w = nextFace.w;
-                  mergedLocation.h = nextFace.h;
+              if (nextFace.x < mergedLocation.x) {
+                  mergedLocation.x = (mergedLocation.x + nextFace.x) / 2;
+              }
+              if (nextFace.y < mergedLocation.y) {
+                  mergedLocation.y = (mergedLocation.y + nextFace.y) / 2;
+              }
+              final int x1 = nextFace.x + nextFace.w;
+              final int y1 = nextFace.y + nextFace.h;
+              if (x1 > mergedLocation.x + mergedLocation.w) {
+                  mergedLocation.w = (mergedLocation.w + x1 - mergedLocation.x) / 2;
+              }
+              if (y1 > mergedLocation.y + mergedLocation.h) {
+                  mergedLocation.h = (mergedLocation.h + y1 - mergedLocation.y) / 2;
+              }
+              if (nextFace.w < narrowestLocation.w) {
+                  narrowestLocation.x = nextFace.x;
+                  narrowestLocation.y = nextFace.y;
+                  narrowestLocation.w = nextFace.w;
+                  narrowestLocation.h = nextFace.h;
               }
           }
+          if (mergedLocation.w > narrowestLocation.w * 1.3) {
+              // Not allowing window to grow too much - averaging to narrowest.
+              mergedLocation.x = (mergedLocation.x + narrowestLocation.x) / 2;
+              mergedLocation.y = (mergedLocation.y + narrowestLocation.y) / 2;
+              final int x1 = narrowestLocation.x + narrowestLocation.w;
+              final int y1 = narrowestLocation.y + narrowestLocation.h;
+              mergedLocation.w = (mergedLocation.w + x1 - mergedLocation.x) / 2;
+              mergedLocation.h = (mergedLocation.h + y1 - mergedLocation.y) / 2;
+          }
           if (facesAtLocation >= quorum) {
-              mergedFaces.add(new FaceLocation(mergedLocation));
+              mergedFaces.add(new FaceLocation(narrowestMatch ? narrowestLocation : mergedLocation));
           }
       }
       return mergedFaces;
