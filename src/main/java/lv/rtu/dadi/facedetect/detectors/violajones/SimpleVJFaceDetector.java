@@ -97,5 +97,8 @@ public class SimpleVJFaceDetector implements FaceDetector {
         return cascade;
     }
 
+    public int getCascadeWindowWidth() {
+        return cascade.getWidth();
+    }
 
 }

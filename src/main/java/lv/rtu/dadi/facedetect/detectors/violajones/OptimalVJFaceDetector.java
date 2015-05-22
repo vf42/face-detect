@@ -26,9 +26,9 @@ public class OptimalVJFaceDetector extends SimpleVJFaceDetector {
     public OptimalVJFaceDetector() throws FileNotFoundException, XMLStreamException {
         super(new OpenCV3DetectionCascade(
                                 ClassLoader.getSystemClassLoader().getResourceAsStream(CASCADE_FILE)),
-                        new FaceCenterMerger(3, false));
+                        new FaceCenterMerger(3, true));
         this.preprocessor = GrayscaleFilterFactory.getFilterChain(
-                GrayscaleFilterFactory.getGammaCorrection(1.0, 1.4),
+                GrayscaleFilterFactory.getHistogramEquialization(),
                 GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.HIFREQ_3X3_1),
                 GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.LOWFREQ_3X3_2));
     }

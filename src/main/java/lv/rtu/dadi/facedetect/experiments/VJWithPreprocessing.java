@@ -52,7 +52,8 @@ public class VJWithPreprocessing {
       // First preprocessor with edge detection.
       final GrayscaleFilter preprocessor =
               GrayscaleFilterFactory.getFilterChain(
-                      GrayscaleFilterFactory.getGammaCorrection(1.0, 1.4),
+//                      GrayscaleFilterFactory.getGammaCorrection(1.0, 1.4),
+                      GrayscaleFilterFactory.getHistogramEquialization(),
                       GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.HIFREQ_3X3_1),
                       GrayscaleFilterFactory.getLinearFilter(GrayscaleFilterFactory.LOWFREQ_3X3_2));
 

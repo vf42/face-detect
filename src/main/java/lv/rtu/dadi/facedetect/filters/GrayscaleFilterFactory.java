@@ -2,8 +2,10 @@ package lv.rtu.dadi.facedetect.filters;
 
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import lv.rtu.dadi.facedetect.bitmaps.GrayscaleHistogram;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
@@ -383,6 +385,33 @@ public final class GrayscaleFilterFactory {
                         .map(x -> ((x - xmin) / xdiff) * ydiff + ymin).toArray())
                         .toArray(len -> new double[len][]);
                 return new GrayscaleImage(pixels);
+            }
+        };
+    }
+
+    public static GrayscaleFilter getHistogramEquialization() {
+        return new GrayscaleFilter() {
+            @Override
+            public GrayscaleImage apply(GrayscaleImage source) {
+                // Get histogram.
+                final GrayscaleHistogram hist = new GrayscaleHistogram(source);
+                // Calculate Pn.
+                final double totalPixels = source.getWidth() * source.getHeight();
+                final double[] p = IntStream.of(hist.values)
+                    .mapToDouble(pixnum -> pixnum / totalPixels).toArray();
+                // Transform pixel intensities.
+                return new GrayscaleImage(
+                        Stream.of(source.pixels).map(
+                                row -> DoubleStream.of(row).map(
+                                         val -> {
+                                             double psum = 0;
+                                             for (int i = 0; i < val * 256; i++)
+                                                 psum += p[i];
+                                             if (psum > 1.0) psum = 1.0;
+                                             if (psum < 0.0) psum = 0.0;
+                                             return psum; // No need to convert to 0..255 value.
+                                         }).toArray()).toArray(len -> new double[len][])
+                        );
             }
         };
     }

@@ -1,6 +1,10 @@
 package lv.rtu.dadi.facedetect;
 
 import java.awt.BorderLayout;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -27,6 +31,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.stream.XMLStreamException;
 
@@ -42,6 +48,8 @@ import org.apache.commons.imaging.ImageReadException;
  *
  */
 public class FaceDetectGui extends JFrame implements ItemListener {
+    private static final String DEFAULT_STATUS_STR = "Drag files here";
+
     private static final long serialVersionUID = 1L;
 
     private JCheckBox jcbPreviewProcessed;
@@ -118,7 +126,32 @@ public class FaceDetectGui extends JFrame implements ItemListener {
         panel.add(jcbShowFinalResult);
 
         progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setString(DEFAULT_STATUS_STR);
         getContentPane().add(progressBar, BorderLayout.SOUTH);
+
+        // Setup drag&drop.
+        this.setDropTarget(new DropTarget() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public synchronized void drop(DropTargetDropEvent evt) {
+                try {
+                    if (!detectorLock.isLocked()) {
+                        evt.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                        @SuppressWarnings("unchecked")
+                        final
+                        List<File> droppedFiles = (List<File>) evt.getTransferable()
+                                .getTransferData(DataFlavor.javaFileListFlavor);
+                        for (final File file : droppedFiles) {
+                            detectInFile(file);
+                        }
+                    }
+                } catch (final Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initMenu() {
@@ -151,16 +184,15 @@ public class FaceDetectGui extends JFrame implements ItemListener {
         setJMenuBar(menubar);
     }
 
-    public static void main(String[] args) throws FileNotFoundException, XMLStreamException {
-        new FaceDetectGui();
-    }
-
     public void openAndDetect() throws ImageReadException, IOException {
         final File f = openFile();
         if (f == null) {
             return;
         }
+        detectInFile(f);
+    }
 
+    private void detectInFile(final File f) {
         final JFrame parentWindow = this;
         executor.schedule(new Runnable() {
 
@@ -169,6 +201,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
                 try {
                     btnOpenAndDetect.setEnabled(false);
                     detectorLock.lock();
+                    progressBar.setString(f.getName());
 
                     final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage(f));
                     int winLocShift = 0;
@@ -202,11 +235,10 @@ public class FaceDetectGui extends JFrame implements ItemListener {
                         ipw.setLocationRelativeTo(parentWindow);
                         ipw.setLocation(parentWindow.getWidth() + 5 + winLocShift, winLocShift);
                     }
-                } catch (final ImageReadException e1) {
-                    e1.printStackTrace();
-                } catch (final IOException e1) {
+                } catch (final Exception e1) {
                     e1.printStackTrace();
                 } finally {
+                    progressBar.setString(DEFAULT_STATUS_STR);
                     detectorLock.unlock();
                     progressBar.setIndeterminate(false);
                     btnOpenAndDetect.setEnabled(true);
@@ -255,5 +287,11 @@ public class FaceDetectGui extends JFrame implements ItemListener {
         }
     }
 
+    public static void main(String[] args) throws FileNotFoundException, XMLStreamException,
+            ClassNotFoundException, InstantiationException, IllegalAccessException,
+            UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        new FaceDetectGui();
+    }
 
 }

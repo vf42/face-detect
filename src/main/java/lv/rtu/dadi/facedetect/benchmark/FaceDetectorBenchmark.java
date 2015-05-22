@@ -65,14 +65,19 @@ public class FaceDetectorBenchmark {
                 int fileWrong = 0;
                 final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage(bf.path));
                 final List<FaceLocation> detectorResult = detector.detectFaces(scene);
+                final List<FaceLocation> oneFaceResults = new LinkedList<FaceLocation>();
                 for (final FaceLocation fl : detectorResult) {
-                    if (!bf.faces.stream().anyMatch(
-                            p -> p.x > fl.x && p.x < fl.x + fl.w && p.y > fl.y && p.y < fl.y + fl.h)) {
+                    // For a succesfull match, there should be exactly one face detected in ar region.
+                    final long facesInRegion = bf.faces.stream().filter(
+                            p -> p.x > fl.x && p.x < fl.x + fl.w && p.y > fl.y && p.y < fl.y + fl.h).count();
+                    if (facesInRegion != 1) {
                         ++fileWrong;
+                    } else {
+                        oneFaceResults.add(fl);
                     }
                 }
                 for (final Point p : bf.faces) {
-                    if (detectorResult.stream().anyMatch(
+                    if (oneFaceResults.stream().anyMatch(
                             fl -> p.x > fl.x && p.x < fl.x + fl.w && p.y > fl.y && p.y < fl.y + fl.h)) {
                         ++fileCorrect;
                     }

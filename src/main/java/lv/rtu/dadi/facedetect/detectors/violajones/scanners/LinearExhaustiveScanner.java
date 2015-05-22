@@ -33,8 +33,10 @@ public class LinearExhaustiveScanner implements SubWindowScanner {
             ViolaJonesContext context, boolean factorScaling) {
         this.detector = violaJonesFaceDetector;
         this.scene = context.scene;
-        this.maxWindowSize = scene.getWidth() < scene.getHeight() ? scene.getWidth() : scene.getHeight();
-        this.minWindowSize = scene.getWidth() / 20; //this.detector.getCascade().getWidth();
+        this.maxWindowSize = (int) Math.round(
+                (scene.getWidth() < scene.getHeight() ? scene.getWidth() : scene.getHeight()) * 0.75);
+//        this.minWindowSize = Math.max(this.detector.getCascade().getWidth(), scene.getWidth() / 20);
+        this.minWindowSize = this.detector.getCascade().getWidth();
         this.factorScaling = factorScaling;
         if (factorScaling) {
             this.sizeStep = 1.1;

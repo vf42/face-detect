@@ -1,5 +1,6 @@
 package lv.rtu.dadi.facedetect.detectors.mergers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -52,6 +53,8 @@ public class FaceCenterMerger implements FaceMerger {
           }
           // Merge near-located faces to this one.
           final SubWindow mergedLocation = new SubWindow(currFace.x, currFace.y, currFace.w, currFace.h);
+          final List<FaceLocation> currentFaces = new ArrayList<>();
+          currentFaces.add(currFace);
           final SubWindow narrowestLocation = new SubWindow(currFace.x, currFace.y, currFace.w, currFace.h);
           final int originalWidth = currFace.w;
           int facesAtLocation = 1;
@@ -59,6 +62,7 @@ public class FaceCenterMerger implements FaceMerger {
                   && centerDistance(currFace, allFaces[currIdx]) < getCenterThreshold(mergedLocation)) {
               ++facesAtLocation;
               final FaceLocation nextFace = allFaces[currIdx];
+              currentFaces.add(nextFace);
               if (nextFace.x < mergedLocation.x) {
                   mergedLocation.x = (mergedLocation.x + nextFace.x) / 2;
               }
@@ -90,7 +94,18 @@ public class FaceCenterMerger implements FaceMerger {
               mergedLocation.h = (mergedLocation.h + y1 - mergedLocation.y) / 2;
           }
           if (facesAtLocation >= quorum) {
-              mergedFaces.add(new FaceLocation(narrowestMatch ? narrowestLocation : mergedLocation));
+              if (narrowestMatch) {
+                  mergedFaces.add(new FaceLocation(narrowestLocation));
+              } else {
+                  // Get median location.
+                  currentFaces.sort(new Comparator<FaceLocation>() {
+                        @Override
+                        public int compare(FaceLocation o1, FaceLocation o2) {
+                            return o1.w - o2.w;
+                        }
+                  });
+                  mergedFaces.add(currentFaces.get(currentFaces.size() / 2));
+              }
           }
       }
       return mergedFaces;

@@ -16,7 +16,7 @@ public class GrayscaleHistogram {
     public GrayscaleHistogram(GrayscaleImage img) {
         Arrays.fill(values, 0);
         for (int i = 0; i < img.pixels.length; i++) {
-            for (int j = 0; j < img.pixels.length; j++) {
+            for (int j = 0; j < img.pixels[i].length; j++) {
                 final int pixelVal = (int) (img.pixels[i][j] * 255);
                 ++values[pixelVal];
             }
