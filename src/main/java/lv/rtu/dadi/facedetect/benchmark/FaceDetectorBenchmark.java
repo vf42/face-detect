@@ -58,11 +58,13 @@ public class FaceDetectorBenchmark {
         int totalFaces = 0;
         int correctDetections = 0;
         int falseDetections = 0;
+        int missedDetections = 0;
         int idx = 0;
         for (final BenchFile bf : files) {
             try {
                 int fileCorrect = 0;
                 int fileWrong = 0;
+                int fileMissed = 0;
                 final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage(bf.path));
                 final List<FaceLocation> detectorResult = detector.detectFaces(scene);
                 final List<FaceLocation> oneFaceResults = new LinkedList<FaceLocation>();
@@ -80,12 +82,15 @@ public class FaceDetectorBenchmark {
                     if (oneFaceResults.stream().anyMatch(
                             fl -> p.x > fl.x && p.x < fl.x + fl.w && p.y > fl.y && p.y < fl.y + fl.h)) {
                         ++fileCorrect;
+                    } else {
+                        ++fileMissed;
                     }
                 }
 
                 totalFaces += bf.faces.size();
                 correctDetections += fileCorrect;
                 falseDetections += fileWrong;
+                missedDetections += fileMissed;
 
                 if (showResults) {
                     new ImagePreviewWindow(bf.path, scene, detectorResult);
@@ -100,11 +105,8 @@ public class FaceDetectorBenchmark {
                 ex.printStackTrace();
             }
         }
-        final BenchmarkResult result = new BenchmarkResult(totalFaces,
-                correctDetections,
-                falseDetections,
-                correctDetections / (double) totalFaces,
-                falseDetections / (double) correctDetections);
+        final BenchmarkResult result = new BenchmarkResult(
+                totalFaces, correctDetections, falseDetections, missedDetections);
         if (Settings.DEBUG) {
             result.print();
         }
@@ -122,7 +124,6 @@ public class FaceDetectorBenchmark {
             throws FileNotFoundException, XMLStreamException, FactoryConfigurationError {
         final String dir = new File(confFile).getParent() + "/";
         if (Settings.DEBUG) {
-            System.out.println("Loading benchmark from " + confFile + " (" + dir + ")");
             System.out.println("Loading benchmark from " + confFile);
         }
         final XMLStreamReader reader =

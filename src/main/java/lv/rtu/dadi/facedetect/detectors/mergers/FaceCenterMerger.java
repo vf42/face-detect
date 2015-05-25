@@ -117,11 +117,12 @@ public class FaceCenterMerger implements FaceMerger {
      * @return
      */
     private double getCenterThreshold(SubWindow sw) {
-        final int x0 = sw.x + (sw.w / 3);
-        final int y0 = sw.y + (sw.h / 3);
-        final int x1 = sw.x + (2*sw.w / 3);
-        final int y1 = sw.y + (2*sw.h / 3);
-        return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
+//        final int x0 = sw.x + (sw.w / 3);
+//        final int y0 = sw.y + (sw.h / 3);
+//        final int x1 = sw.x + (2*sw.w / 3);
+//        final int y1 = sw.y + (2*sw.h / 3);
+//        return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
+        return Math.sqrt(Math.pow(sw.w / 3, 2) + Math.pow(sw.h / 3, 2));
     }
 
     /**

@@ -28,7 +28,7 @@ public class BenchmarkTest {
         final long startTime = System.nanoTime();
 
         final FaceDetectorBenchmark bench =
-                new FaceDetectorBenchmark("data/benchmarks/mit-cmu_test-low.xml", true);
+                new FaceDetectorBenchmark("data/benchmarks/mit-cmu_test.xml", false);
 
         final FaceDetector detector1 = new SimpleVJFaceDetector(
                 new OpenCV3DetectionCascade(

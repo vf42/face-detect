@@ -389,6 +389,10 @@ public final class GrayscaleFilterFactory {
         };
     }
 
+    /**
+     * Returns histogram equalization filter for the image.
+     * @return
+     */
     public static GrayscaleFilter getHistogramEquialization() {
         return new GrayscaleFilter() {
             @Override
@@ -403,7 +407,8 @@ public final class GrayscaleFilterFactory {
                 return new GrayscaleImage(
                         Stream.of(source.pixels).map(
                                 row -> DoubleStream.of(row).map(
-                                         val -> {
+                                         val ->
+                                         {
                                              double psum = 0;
                                              for (int i = 0; i < val * 256; i++)
                                                  psum += p[i];

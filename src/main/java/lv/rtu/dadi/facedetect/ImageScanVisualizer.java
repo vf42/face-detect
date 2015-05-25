@@ -212,12 +212,6 @@ public class ImageScanVisualizer extends ImagePreviewWindow {
 
     public void setWindow(SubWindow sw) {
         ((ImageScanCanvas) this.canvas).setWindow(sw);
-        if (!visualizeFeatures) {
-//            try {
-//                Thread.sleep(0, 100);
-//            } catch (final InterruptedException e) {
-//            }
-        }
     }
 
     public void setFaces(List<FaceLocation> faces) {
@@ -227,10 +221,6 @@ public class ImageScanVisualizer extends ImagePreviewWindow {
     public void setFeature(HaarLikeFeature feature) {
         if (visualizeFeatures) {
             ((ImageScanCanvas) this.canvas).setFeature(feature);
-//            try {
-//                Thread.sleep(0, 1);
-//            } catch (final InterruptedException e) {
-//            }
         }
     }
 

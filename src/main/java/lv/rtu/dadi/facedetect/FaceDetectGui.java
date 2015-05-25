@@ -128,6 +128,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
         progressBar.setString(DEFAULT_STATUS_STR);
+        progressBar.setVisible(true);
         getContentPane().add(progressBar, BorderLayout.SOUTH);
 
         // Setup drag&drop.

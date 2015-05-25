@@ -30,8 +30,8 @@ public class VJComparison {
     private final static String SCENE_FILE =
 //            "data\\MIT-CMU\\test-low\\trek-trio.gif";
 //    "data\\miscpics\\brazil-processed.gif";
-            "data\\MIT-CMU\\test-low\\Brazil.gif";
-//            "data\\miscpics\\5.jpg";
+//            "data\\MIT-CMU\\test-low\\Brazil.gif";
+            "data\\miscpics\\1.jpg";
 
     public VJComparison() {
         // TODO Auto-generated constructor stub
