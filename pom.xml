@@ -4,7 +4,7 @@
 
 	<groupId>lv.rtu.dadi</groupId>
 	<artifactId>face-detect</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.9-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>face-detect</name>
@@ -59,6 +59,30 @@
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
 			<version>2.3.1</version>
+		</dependency>
+
+		<!-- Local dependencies. -->
+		<dependency>
+			<groupId>face-detect</groupId>
+			<artifactId>jviolajones</artifactId>
+			<version>2.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jviolajones2.0.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>face-detect</groupId>
+			<artifactId>opencv</artifactId>
+			<version>3.0rc1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/opencv-300.jar</systemPath>
+		</dependency>
+
+		<!-- Required by jviolajones. -->
+		<dependency>
+			<groupId>jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 </project>
