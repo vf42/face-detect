@@ -21,6 +21,7 @@ import lv.rtu.dadi.facedetect.Settings;
 import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 import lv.rtu.dadi.facedetect.detectors.FaceDetector;
 import lv.rtu.dadi.facedetect.detectors.FaceLocation;
+import lv.rtu.dadi.facedetect.external.FakeGrayscaleImage;
 
 import org.apache.commons.imaging.ImageReadException;
 
@@ -32,7 +33,7 @@ import org.apache.commons.imaging.ImageReadException;
  */
 public class FaceDetectorBenchmark {
 
-    class BenchFile {
+    static class BenchFile {
         String path;
         List<Point> faces = new ArrayList<Point>(); // Storing approximate centers of faces.
     }
@@ -54,7 +55,13 @@ public class FaceDetectorBenchmark {
         this(confFile, false);
     }
 
-    public BenchmarkResult testDetector(FaceDetector detector) throws ImageReadException, IOException {
+    public BenchmarkResult testDetector(FaceDetector detector)
+            throws ImageReadException, IOException {
+        return testDetector(detector, false);
+    }
+
+    public BenchmarkResult testDetector(FaceDetector detector, boolean externalDetector)
+            throws ImageReadException, IOException {
         int totalFaces = 0;
         int correctDetections = 0;
         int falseDetections = 0;
@@ -65,8 +72,10 @@ public class FaceDetectorBenchmark {
                 int fileCorrect = 0;
                 int fileWrong = 0;
                 int fileMissed = 0;
+//                bf.path = bf.path.concat(".jpg"); // Temporary - only for OCV test.
                 final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage(bf.path));
-                final List<FaceLocation> detectorResult = detector.detectFaces(scene);
+                final List<FaceLocation> detectorResult = detector.detectFaces(
+                        !externalDetector ? scene : new FakeGrayscaleImage(bf.path));
                 final List<FaceLocation> oneFaceResults = new LinkedList<FaceLocation>();
                 for (final FaceLocation fl : detectorResult) {
                     // For a succesfull match, there should be exactly one face detected in ar region.

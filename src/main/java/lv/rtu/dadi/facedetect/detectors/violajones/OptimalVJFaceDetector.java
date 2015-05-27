@@ -21,7 +21,7 @@ public class OptimalVJFaceDetector extends SimpleVJFaceDetector {
 
     private final static String CASCADE_FILE = "cascades/haarcascade_frontalface_alt.xml";
 
-    private final GrayscaleFilter preprocessor;
+    private GrayscaleFilter preprocessor;
 
     public OptimalVJFaceDetector() throws FileNotFoundException, XMLStreamException {
         super(new OpenCV3DetectionCascade(
@@ -41,6 +41,14 @@ public class OptimalVJFaceDetector extends SimpleVJFaceDetector {
     @Override
     public GrayscaleImage getPreprocessed(GrayscaleImage scene) {
         return preprocessor.apply(scene);
+    }
+
+    public GrayscaleFilter getPreprocessor() {
+        return preprocessor;
+    }
+
+    public void setPreprocessor(GrayscaleFilter preprocessor) {
+        this.preprocessor = preprocessor;
     }
 
 }

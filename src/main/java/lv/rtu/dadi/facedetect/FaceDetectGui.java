@@ -60,7 +60,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
     private JProgressBar progressBar;
 
     private final FaceDetector detector;
-    private final ReentrantLock detectorLock;
+    private final ReentrantLock detectionLock;
 
     private String lastDir = null;
 
@@ -69,7 +69,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
     public FaceDetectGui() throws FileNotFoundException, XMLStreamException {
         initUI();
         detector = new OptimalVJFaceDetector();
-        detectorLock = new ReentrantLock();
+        detectionLock = new ReentrantLock();
     }
 
     /**
@@ -138,7 +138,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
             @Override
             public synchronized void drop(DropTargetDropEvent evt) {
                 try {
-                    if (!detectorLock.isLocked()) {
+                    if (!detectionLock.isLocked()) {
                         evt.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
                         @SuppressWarnings("unchecked")
                         final
@@ -201,7 +201,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
             public void run() {
                 try {
                     btnOpenAndDetect.setEnabled(false);
-                    detectorLock.lock();
+                    detectionLock.lock();
                     progressBar.setString(f.getName());
 
                     final GrayscaleImage scene = new GrayscaleImage(ImageUtils.readImage(f));
@@ -240,7 +240,7 @@ public class FaceDetectGui extends JFrame implements ItemListener {
                     e1.printStackTrace();
                 } finally {
                     progressBar.setString(DEFAULT_STATUS_STR);
-                    detectorLock.unlock();
+                    detectionLock.unlock();
                     progressBar.setIndeterminate(false);
                     btnOpenAndDetect.setEnabled(true);
                 }
