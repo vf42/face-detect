@@ -6,7 +6,7 @@ import lv.rtu.dadi.facedetect.bitmaps.IntegralImage;
 
 /**
  * Abstract class that provides universal tools for Haar-like feature computation.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class HaarLikeFeature {

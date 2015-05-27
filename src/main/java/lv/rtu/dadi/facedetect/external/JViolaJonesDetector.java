@@ -11,7 +11,7 @@ import detection.Detector;
 
 /**
  * An adapter to jviolajones face detection library.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class JViolaJonesDetector implements FaceDetector {

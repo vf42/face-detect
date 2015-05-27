@@ -7,7 +7,7 @@ import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
  * Interface for general face detection algorithm.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public interface FaceDetector {

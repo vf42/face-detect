@@ -13,7 +13,7 @@ import lv.rtu.dadi.facedetect.filters.GrayscaleFilterFactory;
 /**
  * Performs detection using simple 2D corellation.
  *
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class SimpleCorrelationDetector implements FaceDetector {

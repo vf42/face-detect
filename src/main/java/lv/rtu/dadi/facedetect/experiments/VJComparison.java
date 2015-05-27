@@ -19,7 +19,7 @@ import org.apache.commons.imaging.ImageReadException;
 
 /**
  * Compare different VJ implementations visually.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class VJComparison {

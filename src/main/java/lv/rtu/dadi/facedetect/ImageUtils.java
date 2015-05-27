@@ -18,7 +18,7 @@ import org.apache.commons.imaging.common.BufferedImageFactory;
 
 /**
  * Various utility methods for image operations.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  */
 public class ImageUtils {
 

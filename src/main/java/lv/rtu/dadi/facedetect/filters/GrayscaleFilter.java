@@ -4,7 +4,7 @@ import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
  * Interface for filtering.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public interface GrayscaleFilter {

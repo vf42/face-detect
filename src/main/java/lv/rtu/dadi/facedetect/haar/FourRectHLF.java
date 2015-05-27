@@ -3,7 +3,7 @@ package lv.rtu.dadi.facedetect.haar;
 
 /**
  * Four-rect Haar-like feature.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class FourRectHLF extends HaarLikeFeature {

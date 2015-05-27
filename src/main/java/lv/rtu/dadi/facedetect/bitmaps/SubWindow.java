@@ -2,7 +2,7 @@ package lv.rtu.dadi.facedetect.bitmaps;
 
 /**
  * Defines an area in the image.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class SubWindow {

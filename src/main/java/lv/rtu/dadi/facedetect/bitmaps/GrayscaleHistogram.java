@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Computes and stores a histogram from Grayscale Image.
  * Pixel values are converted to int 0..255 representation.
  *
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class GrayscaleHistogram {

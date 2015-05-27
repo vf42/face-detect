@@ -9,7 +9,7 @@ import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
  * Some stuff that should be commonly available during the process.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class ViolaJonesContext {

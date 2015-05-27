@@ -21,7 +21,7 @@ import lv.rtu.dadi.facedetect.haar.HaarRectangle;
 
 /**
  * The HAAR cascade using classifier cascade XML file format found in OpenCV 3.0RC1 distribution.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class OpenCV3DetectionCascade implements DetectionCascade {

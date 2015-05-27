@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 /**
  * Class for storage and basic operations on RGB bitmap.
  *
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class RgbImage implements Image {

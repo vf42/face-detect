@@ -9,7 +9,7 @@ import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesContext;
 /**
  * A scanner that starts with biggest window sizes and doesn't go
  * into already detected face areas with smaller windows.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class SmartShrinkingScanner implements SubWindowScanner {

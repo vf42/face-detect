@@ -8,7 +8,7 @@ import lv.rtu.dadi.facedetect.detectors.violajones.ViolaJonesContext;
 
 /**
  * Separate class that provides subwindow scanning strategy.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class LinearExhaustiveScanner implements SubWindowScanner {

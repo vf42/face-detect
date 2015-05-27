@@ -17,7 +17,7 @@ import org.apache.commons.imaging.ImageReadException;
 
 /**
  * Comparing my detector, jviolajones and OpenCV.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class CompareDifferentImplementations {

@@ -4,7 +4,7 @@ import lv.rtu.dadi.facedetect.bitmaps.SubWindow;
 
 /**
  * Container for face location data.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class FaceLocation {

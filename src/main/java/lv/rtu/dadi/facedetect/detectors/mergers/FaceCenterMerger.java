@@ -11,7 +11,7 @@ import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
  * Merges the faces that have same center.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class FaceCenterMerger implements FaceMerger {

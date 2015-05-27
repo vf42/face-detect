@@ -3,7 +3,7 @@ package lv.rtu.dadi.facedetect.haar;
 
 /**
  * First two-rect feature.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public final class TwoRectHorizontalHLF extends HaarLikeFeature {

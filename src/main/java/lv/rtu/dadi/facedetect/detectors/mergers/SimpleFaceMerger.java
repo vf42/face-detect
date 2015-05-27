@@ -9,7 +9,7 @@ import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
  * Stupid and ineffective merger.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class SimpleFaceMerger implements FaceMerger {

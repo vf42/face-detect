@@ -12,7 +12,7 @@ import org.apache.commons.imaging.ImageReadException;
 
 /**
  * Test that various filters are working.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class TestFilters {

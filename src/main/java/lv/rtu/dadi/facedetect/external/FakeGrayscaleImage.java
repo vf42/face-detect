@@ -6,7 +6,7 @@ import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
  * Stub implementation used to serve only as a container for file names.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class FakeGrayscaleImage extends GrayscaleImage {

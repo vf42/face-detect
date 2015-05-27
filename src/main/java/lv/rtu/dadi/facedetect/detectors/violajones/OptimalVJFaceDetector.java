@@ -14,7 +14,7 @@ import lv.rtu.dadi.facedetect.filters.GrayscaleFilterFactory;
 
 /**
  * Tuned implementation that provides optimal results.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class OptimalVJFaceDetector extends SimpleVJFaceDetector {

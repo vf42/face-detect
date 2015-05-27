@@ -21,7 +21,7 @@ import lv.rtu.dadi.facedetect.benchmark.FaceDetectorBenchmark.BenchFile;
  * Converts the ground truth face data from MIT-CMU to own XML benchmark format.
  * http://vasc.ri.cmu.edu/idb/images/face/frontal_images/list.html
  *
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class MitCmu2Benchmark {

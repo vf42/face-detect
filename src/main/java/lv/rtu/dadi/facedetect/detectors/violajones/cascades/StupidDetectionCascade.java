@@ -14,14 +14,14 @@ import lv.rtu.dadi.facedetect.haar.TwoRectVerticalHLF;
 
 /**
  * A cascade of classifiers that will test if a sub-window may contain a face.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class StupidDetectionCascade implements DetectionCascade {
 
     /**
      * Weak classifier that will either accept or reject particular window.
-     * @author fedorovvadim
+     * @author Vadim Fedorov <vadim.fedorov@gmail.com>
      *
      */
     public class WeakClassifier {

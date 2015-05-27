@@ -10,7 +10,7 @@ import lv.rtu.dadi.facedetect.bitmaps.GrayscaleImage;
 
 /**
  * Creates linear filter for an arbitrary NxN filter.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public final class GrayscaleFilterFactory {

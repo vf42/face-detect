@@ -16,7 +16,7 @@ import org.opencv.objdetect.CascadeClassifier;
 
 /**
  * Wrapper for OpenCV face detection.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class OpenCVDetector implements FaceDetector {

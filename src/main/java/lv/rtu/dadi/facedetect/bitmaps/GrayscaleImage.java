@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
  * Class for storage and basic operations on Grayscale bitmap.
  * Stores pixel values as float [0.0 .. 1.0]
  *
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class GrayscaleImage implements Image {

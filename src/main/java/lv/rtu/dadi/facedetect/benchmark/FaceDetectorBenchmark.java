@@ -28,7 +28,7 @@ import org.apache.commons.imaging.ImageReadException;
 /**
  * Provides FRR, FAR and "distance to ideal" measuring for a FaceDetector,
  * using the provided XML configuration of face data.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class FaceDetectorBenchmark {

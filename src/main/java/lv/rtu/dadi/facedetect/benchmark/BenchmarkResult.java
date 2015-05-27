@@ -3,7 +3,7 @@ package lv.rtu.dadi.facedetect.benchmark;
 
 /**
  * Stores and prints benchmark results.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class BenchmarkResult {

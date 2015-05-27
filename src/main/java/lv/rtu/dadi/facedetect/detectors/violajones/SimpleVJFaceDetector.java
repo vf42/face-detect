@@ -18,7 +18,7 @@ import lv.rtu.dadi.facedetect.detectors.violajones.scanners.SubWindowScanner;
 
 /**
  * Implementation of Viola-Jones face detection, using the prepared cascade.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class SimpleVJFaceDetector implements FaceDetector {

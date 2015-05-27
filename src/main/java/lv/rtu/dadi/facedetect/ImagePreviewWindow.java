@@ -19,7 +19,7 @@ import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
  * Simple window to preview an image.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class ImagePreviewWindow extends JFrame {
@@ -44,7 +44,7 @@ public class ImagePreviewWindow extends JFrame {
 
     /**
      * Drawable component for image.
-     * @author fedorovvadim
+     * @author Vadim Fedorov <vadim.fedorov@gmail.com>
      *
      */
     protected static class ImageCanvas extends Canvas {

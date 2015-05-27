@@ -29,7 +29,7 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 /**
  * OpenGL Window with ability to visualize scan window and found faces.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class ImageScanVisualizer extends ImagePreviewWindow {

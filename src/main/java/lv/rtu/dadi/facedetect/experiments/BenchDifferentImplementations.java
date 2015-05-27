@@ -15,7 +15,7 @@ import org.apache.commons.imaging.ImageReadException;
 
 /**
  * Benchmark of own implementation vs jviolajones vs opencv.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class BenchDifferentImplementations {

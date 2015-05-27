@@ -8,7 +8,7 @@ import lv.rtu.dadi.facedetect.haar.HaarRectangle;
  * Integral image implementation for Haar-like feature computation.
  * Pixel values are converted to int 0..255 representation.
  *
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public class IntegralImage implements Image {

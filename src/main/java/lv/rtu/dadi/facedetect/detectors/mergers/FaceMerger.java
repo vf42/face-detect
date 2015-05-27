@@ -6,7 +6,7 @@ import lv.rtu.dadi.facedetect.detectors.FaceLocation;
 
 /**
  * An interface for face detector result merge.
- * @author fedorovvadim
+ * @author Vadim Fedorov <vadim.fedorov@gmail.com>
  *
  */
 public interface FaceMerger {
