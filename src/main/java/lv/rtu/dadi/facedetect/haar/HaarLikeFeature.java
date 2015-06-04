@@ -36,11 +36,6 @@ public class HaarLikeFeature {
         this.width = width;
         this.height = height;
         this.fullArea = new HaarRectangle(0, 0, width, height, 1.0);
-//        this.fullArea = new HaarRectangle(
-//                Stream.of(rects).mapToInt(r -> r.x0).min().getAsInt(),
-//                Stream.of(rects).mapToInt(r -> r.y0).min().getAsInt(),
-//                Stream.of(rects).mapToInt(r -> r.x1).max().getAsInt(),
-//                Stream.of(rects).mapToInt(r -> r.y1).max().getAsInt(), 1.0);
     }
 
     /**
