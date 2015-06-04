@@ -35,7 +35,6 @@ public class LinearExhaustiveScanner implements SubWindowScanner {
         this.scene = context.scene;
         this.maxWindowSize = (int) Math.round(
                 (scene.getWidth() < scene.getHeight() ? scene.getWidth() : scene.getHeight()) * 0.75);
-//        this.minWindowSize = Math.max(this.detector.getCascade().getWidth(), scene.getWidth() / 20);
         this.minWindowSize = this.detector.getCascade().getWidth();
         this.factorScaling = factorScaling;
         if (factorScaling) {
