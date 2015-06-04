@@ -4,7 +4,7 @@
 
 	<groupId>lv.rtu.dadi</groupId>
 	<artifactId>face-detect</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>face-detect</name>
@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jar.name>face-detect</jar.name>
+		<jar.name>face-detect-app</jar.name>
 	</properties>
 
 	<build>
